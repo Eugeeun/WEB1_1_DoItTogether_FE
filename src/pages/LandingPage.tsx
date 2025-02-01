@@ -39,7 +39,7 @@ const LandingPage = () => {
             <ServiceLogo />
           </Suspense>
         </div>
-        <div className='sticky bottom-6 flex flex-col gap-4'>
+        <div className='mb-6 flex flex-col gap-4'>
           <LoginButton
             provider='kakao'
             handleLoginButton={() => handleLogin('kakao')}
