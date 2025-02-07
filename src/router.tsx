@@ -1,51 +1,39 @@
+import { lazy, Suspense } from 'react';
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 
 import MainLayout from '@/layout/MainLayout';
 import StatisticsLayout from '@/layout/StatisticsLayout';
 
-import ErrorPage from '@/pages/ErrorPage';
-import LandingPage from '@/pages/LandingPage';
-import RegisterPage from '@/pages/register/RegisterPage';
-import SurveyIntroPage from '@/pages/survey/SurveyIntroPage';
-import SurveyPage from '@/pages/survey/SurveyPage';
-import GroupCreatePage from '@/pages/group/GroupCreatePage';
-import GroupSelectPage from '@/pages/group/GroupSelectPage';
-import GroupSettingPage from '@/pages/group/GroupSettingPage';
-import HomePage from '@/pages/home/HomePage';
-import WeeklyStatisticsPage from '@/pages/statistics/WeeklyStatisticsPage';
-import MonthlyStatisticsPage from '@/pages/statistics/MonthlyStatisticsPage';
-import PresetSettingPage from '@/pages/group/PresetSettingPage';
-import MyPage from '@/pages/my/MyPage';
-import MyPageEditPage from '@/pages/my/MyPageEditPage';
-import AccountManagePage from '@/pages/my/AccountManagePage';
-import LeavePage from '@/pages/my/LeavePage';
-import GroupInviteReceivePage from '@/pages/group/GroupInviteReceivePage';
+const ErrorPage = lazy(() => import('@/pages/ErrorPage'));
+const LandingPage = lazy(() => import('@/pages/LandingPage'));
+const RegisterPage = lazy(() => import('@/pages/register/RegisterPage'));
+const SurveyIntroPage = lazy(() => import('@/pages/survey/SurveyIntroPage'));
+const SurveyPage = lazy(() => import('@/pages/survey/SurveyPage'));
+const GroupCreatePage = lazy(() => import('@/pages/group/GroupCreatePage'));
+const GroupSelectPage = lazy(() => import('@/pages/group/GroupSelectPage'));
+const GroupSettingPage = lazy(() => import('@/pages/group/GroupSettingPage'));
+const HomePage = lazy(() => import('@/pages/home/HomePage'));
+const WeeklyStatisticsPage = lazy(() => import('@/pages/statistics/WeeklyStatisticsPage'));
+const MonthlyStatisticsPage = lazy(() => import('@/pages/statistics/MonthlyStatisticsPage'));
+const PresetSettingPage = lazy(() => import('@/pages/group/PresetSettingPage'));
+const MyPage = lazy(() => import('@/pages/my/MyPage'));
+const MyPageEditPage = lazy(() => import('@/pages/my/MyPageEditPage'));
+const AccountManagePage = lazy(() => import('@/pages/my/AccountManagePage'));
+const LeavePage = lazy(() => import('@/pages/my/LeavePage'));
+const GroupInviteReceivePage = lazy(() => import('@/pages/group/GroupInviteReceivePage'));
+const AddHouseworkPage = lazy(() => import('@/pages/housework/AddHouseworkPage'));
+
 import ScrollToTop from '@/components/common/scroll/ScrollToTop';
 import { Toaster } from '@/components/common/ui/toaster';
 import PrivateRouter from '@/components/PrivateRouter';
-import AddHouseworkPage from '@/pages/housework/AddHouseworkPage';
-// import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 const RootLayout = () => {
-  // const location = useLocation();
-
-  // main 경로에 대해서는 애니메이션 제외
-  // const shouldAnimate = !location.pathname.startsWith('/main');
-
   return (
     <>
       <ScrollToTop />
-      {/* {shouldAnimate ? (
-        <TransitionGroup>
-          <CSSTransition key={location.pathname} timeout={300} classNames='page'>
-            <div className='page'> */}
-      <Outlet />
-      {/* </div>
-          </CSSTransition>
-        </TransitionGroup>
-      ) : (
+      <Suspense fallback={<div></div>}>
         <Outlet />
-      )} */}
+      </Suspense>
       <Toaster />
     </>
   );
