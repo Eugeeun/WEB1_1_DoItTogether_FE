@@ -1,13 +1,15 @@
-import React, { Suspense, lazy } from 'react';
+import React from 'react';
 import { useHomePage } from '@/hooks/useHomePage';
 import MetaTags from '@/components/common/metaTags/MetaTags';
 import { useParams } from 'react-router-dom';
 
-const GroupSelectSheet = lazy(() => import('@/components/home/GroupSelectSheet/GroupSelectSheet'));
-const HomeHeader = lazy(() => import('@/components/home/HomeHeader/HomeHeader'));
-const HouseworkList = lazy(() => import('@/components/home/HouseworkList/HouseworkList'));
-const NoList = lazy(() => import('@/components/home/NoList/NoList'));
-const WeeklyDateAndTab = lazy(() => import('@/components/home/WeeklyDateAndTab'));
+import {
+  GroupSelectSheet,
+  HomeHeader,
+  HouseworkList,
+  NoList,
+  WeeklyDateAndTab,
+} from '@/components/home';
 
 const HomePage: React.FC = () => {
   const {
@@ -29,25 +31,23 @@ const HomePage: React.FC = () => {
         url={`https://doit-together.vercel.app/main/${channelId}/`}
       />
 
-      <Suspense fallback={<div></div>}>
-        <HomeHeader />
-        <WeeklyDateAndTab
-          activeTab={activeTab}
-          handleSetActiveTab={setActiveTab}
-          chargers={chargers}
+      <HomeHeader />
+      <WeeklyDateAndTab
+        activeTab={activeTab}
+        handleSetActiveTab={setActiveTab}
+        chargers={chargers}
+      />
+      {!filteredHouseworks || filteredHouseworks.length === 0 ? (
+        <NoList />
+      ) : (
+        <HouseworkList
+          items={filteredHouseworks}
+          handleAction={handleAction}
+          handleEdit={handleEdit}
+          handleDelete={handleDelete}
         />
-        {!filteredHouseworks || filteredHouseworks.length === 0 ? (
-          <NoList />
-        ) : (
-          <HouseworkList
-            items={filteredHouseworks}
-            handleAction={handleAction}
-            handleEdit={handleEdit}
-            handleDelete={handleDelete}
-          />
-        )}
-        <GroupSelectSheet />
-      </Suspense>
+      )}
+      <GroupSelectSheet />
     </>
   );
 };
