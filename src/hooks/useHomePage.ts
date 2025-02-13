@@ -17,10 +17,8 @@ import { getMyInfo } from '@/services/user/getMyInfo';
 import { getWeeklyIncomplete } from '@/services/housework/getWeeklyIncomplete';
 import { postCompliment } from '@/services/noticeManage/postCompliment';
 import { postPoke } from '@/services/noticeManage/postPoke';
-import { postFcmToken } from '@/services/fcm/postFcmToken';
 import useAddHouseWorkStore from '@/store/useAddHouseWorkStore';
 
-import { setupPushNotifications } from '@/utils/fcm';
 import { Housework } from '@/types/apis/houseworkApi';
 import { UserBase } from '@/types/apis/userApi';
 
@@ -109,26 +107,6 @@ export const useHomePage = () => {
 
     fetchGroupUsers();
   }, [channelId]);
-
-  useEffect(() => {
-    const initNotification = async () => {
-      const notificationResult = await setupPushNotifications();
-      if (notificationResult) {
-        const FCM_TOKEN = 'fcm_token';
-        const { token, platformType } = notificationResult;
-        const storedToken = sessionStorage.getItem(FCM_TOKEN);
-        if (!storedToken || storedToken !== token) {
-          try {
-            await postFcmToken({ token, platformType });
-            sessionStorage.setItem(FCM_TOKEN, token);
-          } catch (error) {
-            console.error('Error posting FCM token:', error);
-          }
-        }
-      }
-    };
-    initNotification();
-  }, []);
 
   const updateWeeklyIncomplete = useCallback(async () => {
     try {

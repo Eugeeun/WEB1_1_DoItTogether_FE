@@ -1,7 +1,10 @@
 import axios from 'axios';
 
 export const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_SERVER_URL,
+  baseURL:
+    import.meta.env.MODE === 'production'
+      ? import.meta.env.VITE_PROD_SERVER_URL
+      : import.meta.env.VITE_DEV_SERVER_URL,
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
