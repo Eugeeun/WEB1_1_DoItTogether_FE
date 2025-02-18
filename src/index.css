@@ -3,10 +3,13 @@
 @tailwind utilities;
 
 @layer base {
+
   html,
   body {
     @apply font-Pretendard;
+    height: 100dvh;
   }
+
   :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
@@ -34,6 +37,7 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
@@ -93,9 +97,11 @@ body:has(.react-modal-sheet-container) {
   * {
     @apply box-border;
   }
+
   html {
     @apply flex justify-center;
   }
+
   body {
     @apply h-full w-full max-w;
   }
@@ -105,33 +111,42 @@ body:has(.react-modal-sheet-container) {
 .react-calendar {
   @apply w-full;
 }
+
 .react-calendar__navigation {
   @apply mb-4 flex items-center justify-center gap-8 text-center text-gray2 font-subhead;
 }
+
 .react-calendar__navigation__label {
   @apply grow-0 !important;
 }
+
 .react-calendar__navigation__next-button,
 .react-calendar__navigation__prev-button {
   @apply flex items-center justify-center font-bold;
 }
+
 .react-calendar__navigation__next2-button,
 .react-calendar__navigation__prev2-button,
 .react-calendar__month-view__weekdays .react-calendar__month-view__weekdays__weekday {
   @apply hidden;
 }
+
 .react-calendar__viewContainer {
   @apply flex w-full justify-center;
 }
+
 .react-calendar__month-view {
   @apply w-full;
 }
+
 .react-calendar__month-view__days {
   @apply !grid w-full !grid-cols-7 justify-items-center gap-1 font-body;
 }
+
 .react-calendar__month-view__days__day {
   @apply flex aspect-square w-10 items-center justify-center;
 }
+
 .react-calendar__month-view__weekdays {
   @apply !grid !grid-cols-7 !gap-0;
 }
@@ -172,6 +187,7 @@ body:has(.react-modal-sheet-container) {
   .pb-ios {
     padding-bottom: 1.625rem;
   }
+
   .pb-android {
     padding-bottom: 1.5rem;
   }
