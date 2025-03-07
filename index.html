@@ -59,9 +59,13 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx" defer></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script src="https://cdn.jsdelivr.net/npm/eruda" defer></script>
     <script>
-      eruda.init();
+      if (typeof eruda !== 'undefined') {
+        eruda.init();
+      } else {
+        console.error('Eruda is not loaded.');
+      }
     </script>
   </body>
 </html>
