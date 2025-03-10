@@ -18,6 +18,9 @@ const checkBrowserEnvironment = () => {
     // 일반적인 인앱브라우저 탐지
     /fban|fbav|twitter|wechat|weibo|instagram|line|kakaotalk|naver|band/.test(userAgent);
 
+  // serviceWorker 지원 여부 체크
+  const hasServiceWorker = 'serviceWorker' in navigator && !!navigator.serviceWorker;
+
   // 디버깅을 위한 로그
   if (process.env.NODE_ENV === 'development') {
     console.log('Browser Environment:', {
@@ -25,6 +28,7 @@ const checkBrowserEnvironment = () => {
       isIOS,
       isSafari,
       isInApp,
+      hasServiceWorker,
     });
   }
 
@@ -33,6 +37,7 @@ const checkBrowserEnvironment = () => {
     isSafari,
     isInApp,
     isIOSInApp: isIOS && isInApp,
+    hasServiceWorker,
   };
 };
 
@@ -40,8 +45,8 @@ const checkBrowserEnvironment = () => {
 const initializePWA = async () => {
   const env = checkBrowserEnvironment();
 
-  // iOS 인앱브라우저가 아닐 때만 PWA 초기화
-  if (!env.isIOSInApp) {
+  // serviceWorker를 지원하고 iOS 인앱브라우저가 아닐 때만 PWA 초기화
+  if (env.hasServiceWorker && !env.isIOSInApp) {
     try {
       const { registerSW } = await import('virtual:pwa-register');
       registerSW({
@@ -59,6 +64,8 @@ const initializePWA = async () => {
     } catch (error) {
       console.error('PWA initialization error:', error);
     }
+  } else if (process.env.NODE_ENV === 'development') {
+    console.log('ServiceWorker is not supported in this environment');
   }
 };
 
@@ -87,7 +94,9 @@ const ErudaDebugger = () => {
 const AppWrapper = () => {
   useEffect(() => {
     // 앱이 마운트된 후에 PWA 초기화 시도
-    initializePWA();
+    initializePWA().catch(error => {
+      console.error('Failed to initialize PWA:', error);
+    });
   }, []);
 
   return (
@@ -98,6 +107,12 @@ const AppWrapper = () => {
       </HelmetProvider>
     </StrictMode>
   );
+};
+
+// 전역 에러 핸들러 추가
+window.onerror = function (message, source, lineno, colno, error) {
+  console.error('Global error:', { message, source, lineno, colno, error });
+  return false;
 };
 
 createRoot(document.getElementById('root')!).render(<AppWrapper />);
