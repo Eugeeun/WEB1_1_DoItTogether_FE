@@ -16,8 +16,7 @@ export default defineConfig({
       ext: '.gz',
     }),
     VitePWA({
-      registerType: 'prompt',
-      injectRegister: null, // 자동 등록 비활성화
+      registerType: 'autoUpdate',
       devOptions: {
         enabled: true,
       },
@@ -46,10 +45,7 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
-        navigateFallback: 'index.html',
-        cleanupOutdatedCaches: true,
-        skipWaiting: true,
-        clientsClaim: true,
+        navigateFallback: null,
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/doit-together\.vercel\.app\/.*/i,
@@ -81,5 +77,15 @@ export default defineConfig({
   },
   server: {
     host: true,
+  },
+  build: {
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+        },
+      },
+    },
   },
 });

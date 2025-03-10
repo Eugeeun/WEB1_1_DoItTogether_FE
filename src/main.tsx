@@ -1,9 +1,10 @@
-import { StrictMode, useEffect } from 'react';
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './reset.css';
 import './index.css';
 import { HelmetProvider } from 'react-helmet-async';
+import { registerSW } from 'virtual:pwa-register';
 
 // iOS 인앱브라우저 체크
 const isIOSInApp = () => {
@@ -19,20 +20,17 @@ const isIOSInApp = () => {
   return isIOS && isInApp;
 };
 
-// PWA 등록 함수
-const registerPWA = async () => {
-  try {
-    if (!isIOSInApp()) {
-      const { registerSW } = await import('virtual:pwa-register');
-      registerSW();
-    }
-  } catch (error) {
-    console.error('PWA registration failed:', error);
-  }
-};
-
-// PWA 등록 시도
-registerPWA();
+// PWA 등록 시도 (iOS 인앱브라우저가 아닐 때만)
+if (!isIOSInApp() && 'serviceWorker' in navigator) {
+  registerSW({
+    onNeedRefresh() {},
+    onOfflineReady() {},
+    onRegistered() {},
+    onRegisterError(error) {
+      console.error('SW registration error:', error);
+    },
+  });
+}
 
 // 기본 앱 렌더링
 createRoot(document.getElementById('root')!).render(
