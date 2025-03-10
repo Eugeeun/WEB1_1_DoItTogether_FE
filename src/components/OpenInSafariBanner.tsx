@@ -3,6 +3,43 @@ import { useState } from 'react';
 export const OpenInSafariBanner = () => {
   const [show, setShow] = useState(true);
 
+  const openInSafari = () => {
+    const currentURL = window.location.href;
+
+    // 여러 가지 방법 시도
+    const urls = [
+      `googlechrome://navigate?url=${encodeURIComponent(currentURL)}`,
+      `x-web-search://?${encodeURIComponent(currentURL)}`,
+      currentURL.replace(/^https?:\/\//, 'safari-https://'),
+      currentURL,
+    ];
+
+    // 순차적으로 시도
+    const tryNextUrl = (index = 0) => {
+      if (index >= urls.length) return;
+
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+
+      try {
+        iframe.src = urls[index];
+      } catch (e) {
+        tryNextUrl(index + 1);
+      } finally {
+        setTimeout(() => {
+          document.body.removeChild(iframe);
+          if (index === urls.length - 1) {
+            // 마지막 시도는 직접 이동
+            window.location.href = currentURL;
+          }
+        }, 100);
+      }
+    };
+
+    tryNextUrl();
+  };
+
   if (!show) return null;
 
   return (
@@ -38,9 +75,13 @@ export const OpenInSafariBanner = () => {
         >
           닫기
         </button>
-        <button
-          onClick={() => {
-            window.location.href = 'https://doit-together.vercel.app/';
+        <a
+          href={window.location.href}
+          target='_blank'
+          rel='noopener noreferrer'
+          onClick={e => {
+            e.preventDefault();
+            openInSafari();
           }}
           style={{
             padding: '8px 16px',
@@ -48,10 +89,12 @@ export const OpenInSafariBanner = () => {
             color: '#fff',
             border: 'none',
             borderRadius: '4px',
+            textDecoration: 'none',
+            display: 'inline-block',
           }}
         >
           Safari에서 열기
-        </button>
+        </a>
       </div>
     </div>
   );
