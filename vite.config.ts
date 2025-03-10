@@ -26,13 +26,6 @@ export default defineConfig({
         description: '집안일 협동 기록 서비스, 효율적으로 집안일을 관리하세요.',
         theme_color: '#ffffff',
         lang: 'ko',
-        // prefer_related_applications: true,
-        // related_applications: [
-        //   {
-        //     platform: 'play',
-        //     url: 'https://play.google.com/store/apps/details?id=com.example.app',
-        //   },
-        // ],
         icons: [
           {
             src: 'icons/icon-192x192.png',
@@ -51,7 +44,24 @@ export default defineConfig({
         background_color: '#ffffff',
       },
       workbox: {
-        globPatterns: ['*/.{js,css,html,png,svg}'],
+        globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+        navigateFallback: 'index.html',
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/doit-together\.vercel\.app\/.*/i,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'doitto-cache',
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+        ],
       },
     }),
   ],
