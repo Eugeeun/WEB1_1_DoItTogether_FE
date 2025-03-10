@@ -1,4 +1,4 @@
-import { StrictMode, useEffect } from 'react';
+import { StrictMode, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './reset.css';
@@ -37,33 +37,49 @@ const checkBrowserEnvironment = () => {
   };
 };
 
-// PWA 초기화 함수
-const initializePWA = () => {
+// 앱 초기화 컴포넌트
+const AppInitializer = ({ children }: { children: React.ReactNode }) => {
+  const [isInitialized, setIsInitialized] = useState(false);
   const env = checkBrowserEnvironment();
 
-  // iOS 인앱브라우저가 아닐 때만 PWA 기능 활성화
-  if (!env.isIOSInApp) {
-    try {
-      registerSW({
-        onNeedRefresh() {},
-        onOfflineReady() {},
-        onRegistered(registration) {
-          if (process.env.NODE_ENV === 'development') {
-            console.log('SW Registered:', registration);
-          }
-        },
-        onRegisterError(error) {
-          console.error('SW registration error:', error);
-        },
-      });
-    } catch (error) {
-      console.error('PWA initialization error:', error);
-    }
-  }
-};
+  useEffect(() => {
+    const initializeApp = async () => {
+      try {
+        // iOS 인앱브라우저가 아닐 때만 PWA 초기화
+        if (!env.isIOSInApp) {
+          await registerSW({
+            onNeedRefresh() {},
+            onOfflineReady() {},
+            onRegistered(registration) {
+              if (process.env.NODE_ENV === 'development') {
+                console.log('SW Registered:', registration);
+              }
+            },
+            onRegisterError(error) {
+              console.error('SW registration error:', error);
+              // 에러가 발생해도 앱은 계속 실행
+              setIsInitialized(true);
+            },
+          })();
+        }
+        setIsInitialized(true);
+      } catch (error) {
+        console.error('App initialization error:', error);
+        // 에러가 발생해도 앱은 계속 실행
+        setIsInitialized(true);
+      }
+    };
 
-// PWA 초기화
-initializePWA();
+    initializeApp();
+  }, [env.isIOSInApp]);
+
+  // 초기화가 완료될 때까지 로딩 상태 표시
+  if (!isInitialized) {
+    return null; // 또는 로딩 컴포넌트를 반환
+  }
+
+  return <>{children}</>;
+};
 
 // Eruda 디버거 컴포넌트
 const ErudaDebugger = () => {
@@ -91,8 +107,10 @@ const AppWrapper = () => {
   return (
     <StrictMode>
       <HelmetProvider>
-        <ErudaDebugger />
-        <App />
+        <AppInitializer>
+          <ErudaDebugger />
+          <App />
+        </AppInitializer>
       </HelmetProvider>
     </StrictMode>
   );
