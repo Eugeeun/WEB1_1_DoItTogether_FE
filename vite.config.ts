@@ -45,7 +45,6 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
-        navigateFallback: null,
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/doit-together\.vercel\.app\/.*/i,
@@ -80,12 +79,5 @@ export default defineConfig({
   },
   build: {
     sourcemap: false,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-        },
-      },
-    },
   },
 });

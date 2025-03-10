@@ -4,7 +4,7 @@ import App from './App.tsx';
 import './reset.css';
 import './index.css';
 import { HelmetProvider } from 'react-helmet-async';
-import { registerSW } from 'virtual:pwa-register';
+import { OpenInSafariBanner } from './components/OpenInSafariBanner';
 
 // iOS 인앱브라우저 체크
 const isIOSInApp = () => {
@@ -20,23 +20,19 @@ const isIOSInApp = () => {
   return isIOS && isInApp;
 };
 
-// PWA 등록 시도 (iOS 인앱브라우저가 아닐 때만)
-if (!isIOSInApp() && 'serviceWorker' in navigator) {
-  registerSW({
-    onNeedRefresh() {},
-    onOfflineReady() {},
-    onRegistered() {},
-    onRegisterError(error) {
-      console.error('SW registration error:', error);
-    },
-  });
-}
+// 앱 래퍼 컴포넌트
+const AppWrapper = () => {
+  const isInApp = isIOSInApp();
+
+  return (
+    <StrictMode>
+      <HelmetProvider>
+        <App />
+        {isInApp && <OpenInSafariBanner />}
+      </HelmetProvider>
+    </StrictMode>
+  );
+};
 
 // 기본 앱 렌더링
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <HelmetProvider>
-      <App />
-    </HelmetProvider>
-  </StrictMode>
-);
+createRoot(document.getElementById('root')!).render(<AppWrapper />);
