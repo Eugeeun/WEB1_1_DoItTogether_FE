@@ -6,31 +6,64 @@ import './index.css';
 import { HelmetProvider } from 'react-helmet-async';
 import { registerSW } from 'virtual:pwa-register';
 
-// iOS 인앱브라우저 체크 (Safari는 제외)
-const isIOSInAppExceptSafari = () => {
+// 브라우저 환경 체크
+const checkBrowserEnvironment = () => {
   const userAgent = navigator.userAgent.toLowerCase();
   const isIOS = /iphone|ipad|ipod/.test(userAgent);
-
-  // Safari 브라우저 체크
   const isSafari = /safari/.test(userAgent) && !/chrome/.test(userAgent);
-
-  // 인앱브라우저 체크
   const isInApp =
     /kakao/.test(userAgent) ||
     /line/.test(userAgent) ||
     /facebook/.test(userAgent) ||
-    /instagram/.test(userAgent);
+    /instagram/.test(userAgent) ||
+    // 일반적인 인앱브라우저 탐지
+    /fban|fbav|twitter|wechat|weibo|instagram|line|kakaotalk|naver|band/.test(userAgent);
 
-  return isIOS && isInApp && !isSafari;
+  // 디버깅을 위한 로그
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Browser Environment:', {
+      userAgent,
+      isIOS,
+      isSafari,
+      isInApp,
+    });
+  }
+
+  return {
+    isIOS,
+    isSafari,
+    isInApp,
+    isIOSInApp: isIOS && isInApp,
+  };
 };
 
-// PWA 등록 (iOS 인앱브라우저가 아닐 때만)
-if (!isIOSInAppExceptSafari()) {
-  registerSW({
-    onNeedRefresh() {},
-    onOfflineReady() {},
-  });
-}
+// PWA 초기화 함수
+const initializePWA = () => {
+  const env = checkBrowserEnvironment();
+
+  // iOS 인앱브라우저가 아닐 때만 PWA 기능 활성화
+  if (!env.isIOSInApp) {
+    try {
+      registerSW({
+        onNeedRefresh() {},
+        onOfflineReady() {},
+        onRegistered(registration) {
+          if (process.env.NODE_ENV === 'development') {
+            console.log('SW Registered:', registration);
+          }
+        },
+        onRegisterError(error) {
+          console.error('SW registration error:', error);
+        },
+      });
+    } catch (error) {
+      console.error('PWA initialization error:', error);
+    }
+  }
+};
+
+// PWA 초기화
+initializePWA();
 
 // Eruda 디버거 컴포넌트
 const ErudaDebugger = () => {
