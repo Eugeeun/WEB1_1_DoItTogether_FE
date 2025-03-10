@@ -157,7 +157,7 @@ const usePresetSetting = () => {
       handleAddInput(inputVal, activeInputCateId);
       setInputVal('');
     }
-  }, []);
+  }, [inputVal]);
 
   return {
     handleAddInput,
