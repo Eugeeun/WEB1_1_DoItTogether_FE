@@ -30,6 +30,25 @@
     <link rel="mask-icon" href="/icons/icon-512x512.png" color="#ffffff" />
     <!-- pwa -->
 
+    <script>
+      // iOS 인앱브라우저 체크 함수
+      function isIOSInAppBrowser() {
+        const ua = window.navigator.userAgent;
+        const isIOS = /iPad|iPhone|iPod/.test(ua);
+        const isInApp = /(NAVER|KAKAOTALK|Instagram|FB|Line)/i.test(ua);
+        return isIOS && isInApp;
+      }
+
+      // 서비스워커 등록 전에 체크
+      if ('serviceWorker' in navigator && !isIOSInAppBrowser()) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(error => {
+            console.log('서비스워커 등록 실패:', error);
+          });
+        });
+      }
+    </script>
+
     <title>DoItTogether 두잇투게더</title>
     <meta name="description" content="가사 분담이 필요한 모든 이에게" />
     <link rel="canonical" href="https://doit-together.vercel.app/" />
