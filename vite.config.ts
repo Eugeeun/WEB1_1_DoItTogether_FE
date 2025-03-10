@@ -16,6 +16,10 @@ export default defineConfig({
       ext: '.gz',
     }),
     VitePWA({
+      registerType: 'autoUpdate',
+      devOptions: {
+        enabled: true,
+      },
       manifest: {
         name: 'Do It Together',
         short_name: 'DOITTO',
@@ -38,6 +42,25 @@ export default defineConfig({
         start_url: '/',
         display: 'standalone',
         background_color: '#ffffff',
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/doit-together\.vercel\.app\/.*/i,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'doitto-cache',
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+        ],
       },
     }),
   ],
