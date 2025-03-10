@@ -46,6 +46,9 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
         navigateFallback: 'index.html',
+        cleanupOutdatedCaches: true,
+        skipWaiting: true,
+        clientsClaim: true,
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/doit-together\.vercel\.app\/.*/i,
@@ -62,7 +65,19 @@ export default defineConfig({
             },
           },
         ],
+        // iOS Safari 및 인앱브라우저 대응
+        disableDevLogs: true,
+        sourcemap: false,
       },
+      // iOS Safari 및 인앱브라우저 대응
+      includeAssets: ['**/*'],
+      disable: false,
+      base: '/',
+      minify: true,
+      injectManifest: {
+        injectionPoint: undefined,
+      },
+      selfDestroying: true, // 서비스워커 지원하지 않는 환경에서 자동 제거
     }),
   ],
   css: {
