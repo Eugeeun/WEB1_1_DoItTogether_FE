@@ -16,7 +16,8 @@ export default defineConfig({
       ext: '.gz',
     }),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
+      injectRegister: null, // 자동 등록 비활성화
       devOptions: {
         enabled: true,
       },
@@ -65,19 +66,7 @@ export default defineConfig({
             },
           },
         ],
-        // iOS Safari 및 인앱브라우저 대응
-        disableDevLogs: true,
-        sourcemap: false,
       },
-      // iOS Safari 및 인앱브라우저 대응
-      includeAssets: ['**/*'],
-      disable: false,
-      base: '/',
-      minify: true,
-      injectManifest: {
-        injectionPoint: undefined,
-      },
-      selfDestroying: true, // 서비스워커 지원하지 않는 환경에서 자동 제거
     }),
   ],
   css: {
