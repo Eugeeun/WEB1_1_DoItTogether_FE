@@ -1,3 +1,4 @@
+// 인앱브라우저인지 감지하는 함수
 export function isInAppBrowser() {
   const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
 
@@ -31,12 +32,20 @@ export function redirectToExternalBrowser(setShowLoading: (show: boolean) => voi
 
   if (isIOS) {
     // iOS: Chrome으로 시도 후 Safari로 폴백
-    window.location.href = `googlechrome://${targetUrl.replace(/^https?:\/\//, '')}`;
+    window.location.href = `googlechrome://${targetUrl}`;
     setTimeout(() => {
       window.location.href = targetUrl;
     }, 2000);
   } else {
-    // 안드로이드: Chrome 인텐트로 시도
-    window.location.href = `intent://${targetUrl.replace(/^https?:\/\//, '')}#Intent;scheme=https;package=com.android.chrome;end`;
+    // 안드로이드: Chrome 시도 후 삼성 인터넷이나 기본 브라우저로 폴백
+    window.location.href =
+      `intent://${targetUrl}` +
+      '#Intent;' +
+      'scheme=https;' +
+      // Chrome 패키지를 찾아서 실행 시도
+      'package=com.android.chrome;' +
+      // Chrome이 없으면 이 URL을 기본 브라우저로 열기
+      `S.browser_fallback_url=${encodeURIComponent(targetUrl)};` +
+      'end';
   }
 }
