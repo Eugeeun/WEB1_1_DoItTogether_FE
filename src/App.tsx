@@ -11,10 +11,14 @@ const queryClient = new QueryClient();
 function App() {
   useDevice();
   const [showLoading, setShowLoading] = useState(false);
+  const [redirectAttempted, setRedirectAttempted] = useState(false);
 
   useEffect(() => {
-    redirectToExternalBrowser(setShowLoading);
-  }, []);
+    if (!redirectAttempted) {
+      setRedirectAttempted(true);
+      redirectToExternalBrowser(setShowLoading);
+    }
+  }, [redirectAttempted]);
 
   return (
     <>
