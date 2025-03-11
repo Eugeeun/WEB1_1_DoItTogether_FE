@@ -31,10 +31,10 @@ export function redirectToExternalBrowser(setShowLoading: (show: boolean) => voi
   const targetUrl = window.location.origin + window.location.pathname + window.location.search;
 
   if (isIOS) {
-    // iOS: 먼저 Safari로 시도 (iOS 기본 브라우저)
-    window.location.href = `safari-https://${targetUrl.replace(/^https?:\/\//, '')}`;
+    // iOS: 일반 URL로 열기 (자동으로 Safari로 열림)
+    window.location.replace(targetUrl);
 
-    // Safari가 안 열리면 Chrome으로 시도
+    // 만약 안되면 Chrome 시도
     setTimeout(() => {
       window.location.href = `googlechrome://${targetUrl.replace(/^https?:\/\//, '')}`;
     }, 1000);
