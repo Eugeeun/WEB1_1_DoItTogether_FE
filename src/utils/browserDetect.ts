@@ -32,10 +32,7 @@ export function redirectToExternalBrowser(setShowLoading: (show: boolean) => voi
 
   if (isIOS) {
     // iOS: Chrome으로 시도 후 Safari로 폴백
-    window.location.href = `googlechrome://${targetUrl.replace(/^https?:\/\//, '')}`;
-    setTimeout(() => {
-      window.location.href = targetUrl;
-    }, 2000);
+    window.location.href = targetUrl;
   } else {
     // 안드로이드: Chrome 인텐트로 시도
     window.location.href = `intent://${targetUrl.replace(/^https?:\/\//, '')}#Intent;scheme=https;package=com.android.chrome;end`;
