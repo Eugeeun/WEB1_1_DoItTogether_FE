@@ -10,7 +10,7 @@ const LoginButtons = ({ handleLogin }: LoginButtonsProps) => {
       <div className='text-gray3 font-label'>—— SNS 간편 로그인 ——</div>
       <div className='flex justify-center gap-6'>
         <LoginButton provider='kakao' handleLoginButton={() => handleLogin('kakao')} />
-        {/* <LoginButton provider='naver' handleLoginButton={() => handleLogin('naver')} /> */}
+        <LoginButton provider='naver' handleLoginButton={() => handleLogin('naver')} />
         <LoginButton provider='google' handleLoginButton={() => handleLogin('google')} />
       </div>
     </div>
