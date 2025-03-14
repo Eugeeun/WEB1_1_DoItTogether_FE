@@ -25,7 +25,7 @@ function App() {
 
   return (
     <>
-      {showRedirectPrompt && <LoadingRedirect onClose={handleClose} />}
+      {showRedirectPrompt && <LoadingRedirect handleClose={handleClose} />}
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
       </QueryClientProvider>
