@@ -20,7 +20,7 @@ export default function LoadingRedirect({ onClose }: LoadingRedirectProps) {
 
       <button
         onClick={handleRedirect}
-        className='bg-blue-500 hover:bg-blue-600 max-w-xs mb-4 w-full rounded-lg px-6 py-3 font-semibold text-white shadow-md transition-colors'
+        className='max-w-xs mb-4 w-full rounded-lg bg-main px-6 py-3 font-semibold text-white shadow-md transition-colors'
       >
         외부 브라우저 바로가기
       </button>
