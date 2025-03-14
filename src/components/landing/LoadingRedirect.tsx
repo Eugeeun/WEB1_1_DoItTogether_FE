@@ -1,4 +1,3 @@
-import { useToast } from '@/hooks/use-toast';
 import { redirectToExternalBrowser } from '@/utils/browserDetect';
 import { useState } from 'react';
 
