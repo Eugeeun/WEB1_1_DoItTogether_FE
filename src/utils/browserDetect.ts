@@ -32,13 +32,21 @@ export function redirectToExternalBrowser() {
   const modifiedUrl = targetUrl + (targetUrl.includes('?') ? '&' : '?') + `t=${timestamp}`;
 
   if (isIOS) {
-    // iOS: 사용자 클릭 이벤트에서 window.open 시도 (더 효과적)
-    const newWindow = window.open(modifiedUrl, '_blank');
+    // iOS: 여러 방법 시도
 
-    // 백업: location.href 사용
-    if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
-      window.location.href = modifiedUrl;
-    }
+    // 1. location.href 직접 사용 (사용자 클릭 이벤트에서는 더 효과적)
+    window.location.href = modifiedUrl;
+
+    // 2. 백업: 약간의 지연 후 다시 시도
+    setTimeout(() => {
+      // Safari URL 스킴 시도
+      window.location.href = `x-web-search://?${encodeURIComponent(modifiedUrl)}`;
+    }, 100);
+
+    // 3. 추가 백업: 다른 URL 스킴 시도
+    setTimeout(() => {
+      window.location.href = `googlechrome://${modifiedUrl.replace(/^https?:\/\//, '')}`;
+    }, 200);
   } else {
     // 안드로이드: Chrome 인텐트로 시도
     window.location.href = `intent://${modifiedUrl.replace(/^https?:\/\//, '')}#Intent;scheme=https;package=com.android.chrome;end`;
