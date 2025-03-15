@@ -14,6 +14,9 @@ export function isInAppBrowser() {
   // 라인
   if (/Line/i.test(userAgent)) return true;
 
+  // 네이버
+  if (/NAVER\(inapp/i.test(userAgent)) return true;
+
   // iOS 웹뷰
   if (/(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(userAgent)) return true;
 
