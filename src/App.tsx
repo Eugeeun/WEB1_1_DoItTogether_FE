@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import useDevice from '@/hooks/useDevice';
 import { useEffect, useState } from 'react';
 import { isInAppBrowser } from '@/utils/browserDetect';
-import { LoadingRedirect } from '@/components/landing';
+import LoadingRedirect from '@/components/LoadingRedirect';
 
 const queryClient = new QueryClient();
 
