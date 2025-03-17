@@ -29,9 +29,9 @@ const LoginButton: React.FC<LoginButtonProps> = ({ handleLoginButton, provider }
   return (
     <motion.section variants={item} aria-label={`${provider} 로그인 버튼`}>
       <Button
-        label={''}
+        label={'카카오로 3초만에 시작하기'}
         variant={provider}
-        size='round'
+        size='large'
         handleClick={handleLoginButton}
         icon={PROVIDER_ICONS[provider]}
       />
