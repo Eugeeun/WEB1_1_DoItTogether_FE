@@ -57,9 +57,14 @@ export const useNotification = () => {
 
   const deleteFCM = async (): Promise<boolean> => {
     try {
-      await deleteFcmToken();
-      setFcmEnabled(false);
-      return true;
+      const notificationResult = await setupPushNotifications();
+      if (notificationResult) {
+        const { token } = notificationResult;
+        await deleteFcmToken({ token });
+        setFcmEnabled(false);
+        return true;
+      }
+      return false;
     } catch (error) {
       console.error('FCM 토큰 삭제 오류:', error);
       return false;
