@@ -13,7 +13,6 @@ export const useLanding = () => {
       if (accessToken) {
         sessionStorage.setItem('access_token', accessToken);
 
-        // 알림 초기화
         await initNotification();
 
         try {
