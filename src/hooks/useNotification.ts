@@ -1,4 +1,4 @@
-// useNotification.ts
+import { deleteFcmToken } from '@/services/fcm/deleteFcmToken';
 import { postFcmToken } from '@/services/fcm/postFcmToken';
 import { setupPushNotifications } from '@/utils/fcm';
 import { useEffect, useState } from 'react';
@@ -57,8 +57,7 @@ export const useNotification = () => {
 
   const deleteFCM = async (): Promise<boolean> => {
     try {
-      // 백엔드에 FCM 토큰 삭제 요청
-      // 예: await deleteFcmToken();
+      await deleteFcmToken();
       setFcmEnabled(false);
       return true;
     } catch (error) {
