@@ -1,14 +1,13 @@
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { deleteUser } from '@/services/user/deleteUser';
 
 export const useLeave = () => {
   const navigate = useNavigate();
-  const { channelId } = useParams();
   const [isChecked, setIsChecked] = useState(false);
 
   const handleBack = () => {
-    navigate(`/my-page/account-manage/${channelId}`);
+    navigate(`/my-page/account-manage`);
   };
 
   const handleCheckboxChange = () => {
