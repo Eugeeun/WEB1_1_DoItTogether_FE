@@ -5,6 +5,7 @@ import { useAccountManage } from '@/hooks/useAccountManage';
 import MetaTags from '@/components/common/metaTags/MetaTags';
 import { useParams } from 'react-router-dom';
 import { useMy } from '@/hooks/useMy';
+import FcmToggle from '@/components/my/FcmToggle/FcmToggle';
 
 const AccountManagePage = () => {
   const {
@@ -46,6 +47,7 @@ const AccountManagePage = () => {
         handleClick={() => handleNotice('course')}
       />
       <AccountMenuItem label='탈퇴하기' iconType='탈퇴' handleClick={handleLeave} />
+      <FcmToggle />
     </div>
   );
 };

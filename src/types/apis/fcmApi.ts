@@ -28,3 +28,13 @@ export interface PostTokenToServerReq {
 export interface PostTokenToServerRes extends BaseRes {
   result: {};
 }
+
+/** FCM 토큰 삭제 */
+export interface DeleteTokenFromServerReq {
+  /** 삭제할 토큰 값 */
+  token: string;
+}
+
+export interface DeleteTokenFromServerRes extends BaseRes {
+  result: {};
+}

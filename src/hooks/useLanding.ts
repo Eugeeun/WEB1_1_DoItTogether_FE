@@ -1,18 +1,19 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getMyInitState } from '@/services/user/getMyInitState';
-import { setupPushNotifications } from '@/utils/fcm';
-import { postFcmToken } from '@/services/fcm/postFcmToken';
+import { useNotification } from '@/hooks/useNotification';
 
 export const useLanding = () => {
   const navigate = useNavigate();
+  const { initNotification } = useNotification();
 
   useEffect(() => {
     const checkInitialState = async () => {
       const accessToken = new URLSearchParams(location.search).get('access_token');
       if (accessToken) {
         sessionStorage.setItem('access_token', accessToken);
-        initNotification();
+
+        await initNotification();
 
         try {
           const initState = await getMyInitState();
@@ -28,7 +29,7 @@ export const useLanding = () => {
       return;
     }
     checkInitialState();
-  }, [navigate]);
+  }, [navigate, initNotification]);
 
   const handleLogin = (provider: 'kakao' | 'google' | 'naver') => {
     window.location.href = `${
@@ -38,16 +39,5 @@ export const useLanding = () => {
     }/oauth2/authorization/${provider}`;
   };
 
-  const initNotification = async () => {
-    const notificationResult = await setupPushNotifications();
-    if (notificationResult) {
-      const { token, platformType } = notificationResult;
-      try {
-        await postFcmToken({ token, platformType });
-      } catch (error) {
-        console.error('Error posting FCM token:', error);
-      }
-    }
-  };
   return { handleLogin };
 };
