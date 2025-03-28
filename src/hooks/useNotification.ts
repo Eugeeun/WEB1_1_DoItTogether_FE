@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { setupPushNotifications } from '@/utils/fcm';
-import { postFcmTokenMutation, deleteFcmTokenMutation } from '@/services/fcm/useFcmMutation';
+import { usePostFcmTokenMutation, useDeleteFcmTokenMutation } from '@/services/fcm/useFcmMutation';
 
 export const useNotification = () => {
   const [permissionStatus, setPermissionStatus] = useState<NotificationPermission | 'unsupported'>(
@@ -8,12 +8,12 @@ export const useNotification = () => {
   );
   const [fcmEnabled, setFcmEnabled] = useState(false);
 
-  const postFcmToken = postFcmTokenMutation({
+  const postFcmTokenMutation = usePostFcmTokenMutation({
     onSuccess: () => setFcmEnabled(true),
     onError: error => console.error('FCM 설정 오류:', error),
   });
 
-  const deleteFcmToken = deleteFcmTokenMutation({
+  const deleteFcmTokenMutation = useDeleteFcmTokenMutation({
     onSuccess: () => setFcmEnabled(false),
     onError: error => console.error('FCM 토큰 삭제 오류:', error),
   });
@@ -44,7 +44,7 @@ export const useNotification = () => {
   const setupFCM = async (): Promise<boolean> => {
     const notificationResult = await setupPushNotifications();
     if (notificationResult) {
-      postFcmToken.mutate(notificationResult);
+      postFcmTokenMutation.mutate(notificationResult);
       return true;
     }
     return false;
@@ -53,7 +53,7 @@ export const useNotification = () => {
   const deleteFCM = async (): Promise<boolean> => {
     const notificationResult = await setupPushNotifications();
     if (notificationResult) {
-      deleteFcmToken.mutate({ token: notificationResult.token });
+      deleteFcmTokenMutation.mutate({ token: notificationResult.token });
       return true;
     }
     return false;

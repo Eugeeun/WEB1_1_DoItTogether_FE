@@ -7,14 +7,14 @@ import { deleteFcmToken } from '@/services/fcm/deleteFcmToken';
 import { DeleteTokenFromServerReq, DeleteTokenFromServerRes } from '@/types/apis/fcmApi';
 
 // options는 사용하는 쪽에서 덮어쓰기가 가능
-export const postFcmTokenMutation = (
+export const usePostFcmTokenMutation = (
   options?: MutationOptions<PostTokenToServerRes, Error, PostTokenToServerReq>
 ) => useMutation({ mutationFn: postFcmToken, ...options });
 
-export const postFcmPushMutation = (
+export const usePostFcmPushMutation = (
   options?: MutationOptions<PushNotificationRes, Error, PushNotificationReq>
 ) => useMutation({ mutationFn: postFcmPush, ...options });
 
-export const deleteFcmTokenMutation = (
+export const useDeleteFcmTokenMutation = (
   options?: MutationOptions<DeleteTokenFromServerRes, Error, DeleteTokenFromServerReq>
 ) => useMutation({ mutationFn: deleteFcmToken, ...options });
