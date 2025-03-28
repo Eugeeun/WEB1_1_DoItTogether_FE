@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { setupPushNotifications } from '@/utils/fcm';
-import { usePostFcmTokenMutation, useDeleteFcmTokenMutation } from '@/services/fcm/useFcmMutation';
+import { usePostFcmTokenMutation, useDeleteFcmTokenMutation } from '@/services/fcm/fcmMutation';
 
 export const useNotification = () => {
   const [permissionStatus, setPermissionStatus] = useState<NotificationPermission | 'unsupported'>(
