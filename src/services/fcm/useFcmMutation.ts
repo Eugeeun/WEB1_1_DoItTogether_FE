@@ -5,7 +5,6 @@ import { postFcmPush } from './postFcmPush';
 import { PushNotificationReq, PushNotificationRes } from '@/types/apis/fcmApi';
 import { deleteFcmToken } from '@/services/fcm/deleteFcmToken';
 import { DeleteTokenFromServerReq, DeleteTokenFromServerRes } from '@/types/apis/fcmApi';
-import {} from '@tanstack/react-query';
 
 // options는 사용하는 쪽에서 덮어쓰기가 가능
 export const postFcmTokenMutation = (
