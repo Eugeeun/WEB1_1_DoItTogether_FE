@@ -1,13 +1,22 @@
-import { deleteFcmToken } from '@/services/fcm/deleteFcmToken';
-import { postFcmToken } from '@/services/fcm/postFcmToken';
-import { setupPushNotifications } from '@/utils/fcm';
 import { useEffect, useState } from 'react';
+import { setupPushNotifications } from '@/utils/fcm';
+import { usePostFcmTokenMutation, useDeleteFcmTokenMutation } from '@/services/fcm/fcmMutation';
 
 export const useNotification = () => {
   const [permissionStatus, setPermissionStatus] = useState<NotificationPermission | 'unsupported'>(
     'default'
   );
   const [fcmEnabled, setFcmEnabled] = useState(false);
+
+  const postFcmTokenMutation = usePostFcmTokenMutation({
+    onSuccess: () => setFcmEnabled(true),
+    onError: error => console.error('FCM 설정 오류:', error),
+  });
+
+  const deleteFcmTokenMutation = useDeleteFcmTokenMutation({
+    onSuccess: () => setFcmEnabled(false),
+    onError: error => console.error('FCM 토큰 삭제 오류:', error),
+  });
 
   useEffect(() => {
     checkPermissionStatus();
@@ -25,88 +34,46 @@ export const useNotification = () => {
   };
 
   const requestPermission = async (): Promise<boolean> => {
-    if (!('Notification' in window)) {
-      return false;
-    }
+    if (!('Notification' in window)) return false;
 
-    try {
-      const permission = await Notification.requestPermission();
-      setPermissionStatus(permission);
-      return permission === 'granted';
-    } catch (error) {
-      console.error('알림 권한 요청 오류:', error);
-      return false;
-    }
+    const permission = await Notification.requestPermission();
+    setPermissionStatus(permission);
+    return permission === 'granted';
   };
 
   const setupFCM = async (): Promise<boolean> => {
-    try {
-      const notificationResult = await setupPushNotifications();
-      if (notificationResult) {
-        const { token, platformType } = notificationResult;
-        await postFcmToken({ token, platformType });
-        setFcmEnabled(true);
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error('FCM 설정 오류:', error);
-      return false;
+    const notificationResult = await setupPushNotifications();
+    if (notificationResult) {
+      postFcmTokenMutation.mutate(notificationResult);
+      return true;
     }
+    return false;
   };
 
   const deleteFCM = async (): Promise<boolean> => {
-    try {
-      const notificationResult = await setupPushNotifications();
-      if (notificationResult) {
-        const { token } = notificationResult;
-        await deleteFcmToken({ token });
-        setFcmEnabled(false);
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error('FCM 토큰 삭제 오류:', error);
-      return false;
+    const notificationResult = await setupPushNotifications();
+    if (notificationResult) {
+      deleteFcmTokenMutation.mutate({ token: notificationResult.token });
+      return true;
     }
+    return false;
   };
 
   const initNotification = async (): Promise<boolean> => {
-    if (permissionStatus === 'granted') {
-      return await setupFCM();
-    } else if (permissionStatus === 'default') {
-      const granted = await requestPermission();
-      if (granted) {
-        return await setupFCM();
-      }
-    } else {
-      try {
-        const notificationResult = await setupPushNotifications();
-        if (notificationResult) {
-          const { token, platformType } = notificationResult;
-          await postFcmToken({ token, platformType });
-          return true;
-        }
-      } catch (error) {
-        console.error('FCM 토큰 얻기 실패:', error);
-      }
+    if (permissionStatus === 'granted') return await setupFCM();
+    if (permissionStatus === 'default') {
+      if (await requestPermission()) return await setupFCM();
     }
-
     return false;
   };
 
   const toggleFCM = async (enable: boolean): Promise<boolean> => {
     if (enable) {
-      if (permissionStatus !== 'granted') {
-        const granted = await requestPermission();
-        if (!granted) {
-          return false;
-        }
-      }
-      return await setupFCM();
-    } else {
-      return await deleteFCM();
+      if (permissionStatus !== 'granted' && !(await requestPermission())) return false;
+      return setupFCM(); // FCM 설정
     }
+
+    return deleteFCM(); // FCM 삭제
   };
 
   return {
