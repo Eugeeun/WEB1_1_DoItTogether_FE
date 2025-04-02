@@ -10,19 +10,12 @@ import {
   NoList,
   WeeklyDateAndTab,
 } from '@/components/home';
+import useHomePageStore from '@/store/useHomePageStore';
 
 const HomePage: React.FC = () => {
-  const {
-    chargers,
-    activeTab,
-    setActiveTab,
-    filteredHouseworks,
-    handleAction,
-    handleEdit,
-    handleDelete,
-  } = useHomePage();
+  const { chargers, setActiveTab, handleAction, handleEdit, handleDelete } = useHomePage();
+  const { activeTab } = useHomePageStore();
   const { channelId } = useParams();
-
   return (
     <>
       <MetaTags
@@ -37,16 +30,12 @@ const HomePage: React.FC = () => {
         handleSetActiveTab={setActiveTab}
         chargers={chargers}
       />
-      {!filteredHouseworks || filteredHouseworks.length === 0 ? (
-        <NoList />
-      ) : (
-        <HouseworkList
-          items={filteredHouseworks}
-          handleAction={handleAction}
-          handleEdit={handleEdit}
-          handleDelete={handleDelete}
-        />
-      )}
+      <HouseworkList
+        handleAction={handleAction}
+        handleEdit={handleEdit}
+        handleDelete={handleDelete}
+      />
+      <NoList />
       <GroupSelectSheet />
     </>
   );

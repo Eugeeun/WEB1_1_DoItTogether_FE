@@ -1,23 +1,33 @@
 import React from 'react';
 import HouseworkListItem from '@/components/home/HouseworkList/HouseworkListItem/HouseworkListItem';
-import { Housework } from '@/types/apis/houseworkApi';
+import { PAGE_SIZE } from '@/constants/common';
+import { useGetHouseworksQuery } from '@/services/housework/houseworkQuery';
+import { useParams } from 'react-router-dom';
+import useHomePageStore from '@/store/useHomePageStore';
 
 export interface HouseworkListProps {
-  items: Housework[];
   handleAction: (houseworkId: number) => void;
   handleEdit: (houseworkId: number) => void;
   handleDelete: (houseworkId: number) => void;
 }
 
 const HouseworkList: React.FC<HouseworkListProps> = ({
-  items,
   handleAction,
   handleEdit,
   handleDelete,
 }) => {
+  const { activeDate, homePageNumber } = useHomePageStore();
+  const { channelId } = useParams();
+  const { data: houseworks } = useGetHouseworksQuery({
+    channelId: Number(channelId),
+    targetDate: activeDate,
+    pageNumber: homePageNumber,
+    pageSize: PAGE_SIZE,
+  });
+
   return (
-    <div className='flex max-w flex-col gap-2 p-5'>
-      {items.map(item => (
+    <div className='flex flex-col gap-2 p-5 max-w'>
+      {houseworks?.map(item => (
         <HouseworkListItem
           key={item.houseworkId}
           {...item}
