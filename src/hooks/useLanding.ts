@@ -11,7 +11,7 @@ export const useLanding = () => {
     const checkInitialState = async () => {
       const accessToken = new URLSearchParams(location.search).get('access_token');
       if (accessToken) {
-        sessionStorage.setItem('access_token', accessToken);
+        localStorage.setItem('access_token', accessToken);
 
         await initNotification();
 
@@ -24,7 +24,7 @@ export const useLanding = () => {
       }
     };
 
-    if (sessionStorage.getItem('access_token')) {
+    if (localStorage.getItem('access_token')) {
       navigate('/group-select');
       return;
     }
