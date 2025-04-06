@@ -13,7 +13,7 @@ import {
 import useHomePageStore from '@/store/useHomePageStore';
 
 const HomePage: React.FC = () => {
-  const { chargers, setActiveTab, handleAction, handleEdit, handleDelete } = useHomePage();
+  const { setActiveTab, handleAction, handleEdit, handleDelete } = useHomePage();
   const { activeTab } = useHomePageStore();
   const { channelId } = useParams();
   return (
@@ -25,11 +25,7 @@ const HomePage: React.FC = () => {
       />
 
       <HomeHeader />
-      <WeeklyDateAndTab
-        activeTab={activeTab}
-        handleSetActiveTab={setActiveTab}
-        chargers={chargers}
-      />
+      <WeeklyDateAndTab activeTab={activeTab} handleSetActiveTab={setActiveTab} />
       <HouseworkList
         handleAction={handleAction}
         handleEdit={handleEdit}

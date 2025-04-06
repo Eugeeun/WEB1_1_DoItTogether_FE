@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -9,7 +9,6 @@ import { IncompleteScoreResponse } from '@/types/apis/houseworkApi';
 
 import { changeHouseworkStatus } from '@/services/housework/changeHouseworkStatus';
 import { deleteHousework } from '@/services/housework/deleteHouswork';
-import { getGroupUser } from '@/services/group/getGroupUser';
 import { getMyInfo } from '@/services/user/getMyInfo';
 import { getWeeklyIncomplete } from '@/services/housework/getWeeklyIncomplete';
 import { postCompliment } from '@/services/noticeManage/postCompliment';
@@ -28,7 +27,6 @@ export const useHomePage = () => {
 
   const { channelId: channelIdStr } = useParams();
   const channelId = Number(channelIdStr);
-  const [chargers, setChargers] = useState<{ name: string }[]>([{ name: '전체' }]);
 
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -56,26 +54,6 @@ export const useHomePage = () => {
 
     fetchData();
   }, [channelId, setMyInfo]);
-
-  useEffect(() => {
-    const fetchGroupUsers = async () => {
-      if (!channelId) return;
-      try {
-        const getGroupUsersResult = await getGroupUser({ channelId });
-        const newChargers = [
-          { name: '전체' },
-          ...Array.from(
-            new Set(getGroupUsersResult.result.userList.map(user => user.nickName))
-          ).map(charger => ({ name: charger })),
-        ];
-        setChargers(newChargers);
-      } catch (error) {
-        console.error('그룹 사용자 조회 실패:', error);
-      }
-    };
-
-    fetchGroupUsers();
-  }, [channelId]);
 
   const updateWeeklyIncomplete = useCallback(async () => {
     try {
@@ -190,7 +168,6 @@ export const useHomePage = () => {
   );
 
   return {
-    chargers,
     activeTab,
     setActiveTab,
     handleAction,

@@ -21,6 +21,14 @@ export const useGetGroupUserQuery = (
   return useQuery({
     queryKey: ['groupUser', params],
     queryFn: () => getGroupUser(params),
+    select: data => {
+      return [
+        { name: '전체' },
+        ...Array.from(new Set(data.result.userList.map(user => user.nickName))).map(charger => ({
+          name: charger,
+        })),
+      ];
+    },
     ...options,
   });
 };
