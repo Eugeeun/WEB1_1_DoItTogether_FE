@@ -1,15 +1,15 @@
 import React from 'react';
 import GroupOption from '@/components/home/GroupSelectSheet/GroupOptions/GroupOption';
-import useHomePageStore from '@/store/useHomePageStore';
 import { useParams } from 'react-router-dom';
+import { useGetGroupQuery } from '@/services/group/groupQuery';
 
 const GroupOptions: React.FC = ({}) => {
-  const { groups } = useHomePageStore();
+  const { data: groups } = useGetGroupQuery();
   const { channelId } = useParams();
 
   return (
-    <ul className='flex flex-col gap-y-6 px-5 pb-14 pt-8'>
-      {groups.map(group => (
+    <ul className='flex flex-col px-5 pt-8 gap-y-6 pb-14'>
+      {groups?.map(group => (
         <GroupOption
           key={group.channelId}
           group={group}

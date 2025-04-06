@@ -10,7 +10,6 @@ import { IncompleteScoreResponse } from '@/types/apis/houseworkApi';
 import { changeHouseworkStatus } from '@/services/housework/changeHouseworkStatus';
 import { deleteHousework } from '@/services/housework/deleteHouswork';
 import { getGroupUser } from '@/services/group/getGroupUser';
-import { getMyGroup } from '@/services/group/getMyGroup';
 import { getMyInfo } from '@/services/user/getMyInfo';
 import { getWeeklyIncomplete } from '@/services/housework/getWeeklyIncomplete';
 import { postCompliment } from '@/services/noticeManage/postCompliment';
@@ -22,17 +21,8 @@ import { UserBase } from '@/types/apis/userApi';
 import { PAGE_SIZE } from '@/constants/common';
 
 export const useHomePage = () => {
-  const {
-    setCurrentGroup,
-    setGroups,
-    activeDate,
-    activeTab,
-    setActiveTab,
-    myInfo,
-    setMyInfo,
-    setCurrWeek,
-    homePageNumber,
-  } = useHomePageStore();
+  const { activeDate, activeTab, setActiveTab, myInfo, setMyInfo, setCurrWeek, homePageNumber } =
+    useHomePageStore();
 
   const { setTargetHousework } = useAddHouseWorkStore();
 
@@ -56,23 +46,16 @@ export const useHomePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [myGroupResult, myInfoResult] = await Promise.all([getMyGroup(), getMyInfo()]);
+        const [myInfoResult] = await Promise.all([getMyInfo()]);
 
-        const myGroups = myGroupResult.result.channelList;
-        setGroups(myGroups);
         setMyInfo(myInfoResult.result);
-
-        if (channelId) {
-          const currentGroup = myGroups.find(group => group.channelId === channelId);
-          setCurrentGroup(currentGroup!);
-        }
       } catch (error) {
         console.error('그룹 및 내 정보 조회 중 실패:', error);
       }
     };
 
     fetchData();
-  }, [channelId, setGroups, setMyInfo, setCurrentGroup]);
+  }, [channelId, setMyInfo]);
 
   useEffect(() => {
     const fetchGroupUsers = async () => {
