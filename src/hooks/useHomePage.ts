@@ -19,6 +19,7 @@ import useAddHouseWorkStore from '@/store/useAddHouseWorkStore';
 
 import { Housework } from '@/types/apis/houseworkApi';
 import { UserBase } from '@/types/apis/userApi';
+import { PAGE_SIZE } from '@/constants/common';
 
 export const useHomePage = () => {
   const {
@@ -30,6 +31,7 @@ export const useHomePage = () => {
     myInfo,
     setMyInfo,
     setCurrWeek,
+    homePageNumber,
   } = useHomePageStore();
 
   const { setTargetHousework } = useAddHouseWorkStore();
@@ -41,7 +43,15 @@ export const useHomePage = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const houseworks = queryClient.getQueryData<Housework[]>(['houseworks', channelId]);
+  const houseworks = queryClient.getQueryData<Housework[]>([
+    'houseworks',
+    {
+      channelId: Number(channelId),
+      targetDate: activeDate,
+      pageNumber: homePageNumber,
+      pageSize: PAGE_SIZE,
+    },
+  ]);
 
   useEffect(() => {
     const fetchData = async () => {
