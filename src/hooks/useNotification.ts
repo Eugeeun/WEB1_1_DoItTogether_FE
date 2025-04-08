@@ -32,7 +32,6 @@ export const useNotification = () => {
       if (notificationResult) {
         const { token } = notificationResult;
         const { result } = await postFcmCheck({ token });
-        console.log('상태check' + result.isActive);
         setFcmEnabled(result.isActive);
       }
     } catch (error) {
@@ -79,9 +78,8 @@ export const useNotification = () => {
       const notificationResult = await setupPushNotifications();
       if (notificationResult) {
         const { token } = notificationResult;
-        const response = await deleteFcmToken({ token });
+        await deleteFcmToken({ token });
         setFcmEnabled(false);
-        console.log(response);
         return true;
       }
       return false;
