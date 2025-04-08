@@ -23,10 +23,7 @@ export const useNotification = () => {
   });
 
   const postFcmCheckMutation = usePostFcmCheckMutation({
-    onSuccess: data => {
-      setFcmEnabled(data.result.isActive);
-      console.log('상태확인' + data.result.isActive);
-    },
+    onSuccess: data => setFcmEnabled(data.result.isActive),
     onError: (error: Error) => {
       console.error('FCM 상태 확인 오류:', error);
       setFcmEnabled(false);
@@ -51,7 +48,6 @@ export const useNotification = () => {
   // 서버에서 FCM 활성화 상태 확인
   const checkFcmStatus = async (): Promise<boolean> => {
     const notificationResult = await setupPushNotifications();
-    console.log(notificationResult);
     if (notificationResult) {
       postFcmCheckMutation.mutate({ token: notificationResult.token });
       return true;
