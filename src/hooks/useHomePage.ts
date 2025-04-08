@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -9,8 +9,6 @@ import { IncompleteScoreResponse } from '@/types/apis/houseworkApi';
 
 import { changeHouseworkStatus } from '@/services/housework/changeHouseworkStatus';
 import { deleteHousework } from '@/services/housework/deleteHouswork';
-import { getGroupUser } from '@/services/group/getGroupUser';
-import { getMyGroup } from '@/services/group/getMyGroup';
 import { getMyInfo } from '@/services/user/getMyInfo';
 import { getWeeklyIncomplete } from '@/services/housework/getWeeklyIncomplete';
 import { postCompliment } from '@/services/noticeManage/postCompliment';
@@ -19,70 +17,43 @@ import useAddHouseWorkStore from '@/store/useAddHouseWorkStore';
 
 import { Housework } from '@/types/apis/houseworkApi';
 import { UserBase } from '@/types/apis/userApi';
+import { PAGE_SIZE } from '@/constants/common';
 
 export const useHomePage = () => {
-  const {
-    setCurrentGroup,
-    setGroups,
-    activeDate,
-    activeTab,
-    setActiveTab,
-    myInfo,
-    setMyInfo,
-    setCurrWeek,
-  } = useHomePageStore();
+  const { activeDate, activeTab, setActiveTab, myInfo, setMyInfo, setCurrWeek, homePageNumber } =
+    useHomePageStore();
 
   const { setTargetHousework } = useAddHouseWorkStore();
 
   const { channelId: channelIdStr } = useParams();
   const channelId = Number(channelIdStr);
-  const [chargers, setChargers] = useState<{ name: string }[]>([{ name: '전체' }]);
 
   const { toast } = useToast();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const houseworks = queryClient.getQueryData<Housework[]>(['houseworks', channelId]);
+  const houseworks = queryClient.getQueryData<Housework[]>([
+    'houseworks',
+    {
+      channelId: Number(channelId),
+      targetDate: activeDate,
+      pageNumber: homePageNumber,
+      pageSize: PAGE_SIZE,
+    },
+  ]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [myGroupResult, myInfoResult] = await Promise.all([getMyGroup(), getMyInfo()]);
+        const [myInfoResult] = await Promise.all([getMyInfo()]);
 
-        const myGroups = myGroupResult.result.channelList;
-        setGroups(myGroups);
         setMyInfo(myInfoResult.result);
-
-        if (channelId) {
-          const currentGroup = myGroups.find(group => group.channelId === channelId);
-          setCurrentGroup(currentGroup!);
-        }
       } catch (error) {
         console.error('그룹 및 내 정보 조회 중 실패:', error);
       }
     };
 
     fetchData();
-  }, [channelId, setGroups, setMyInfo, setCurrentGroup]);
-
-  useEffect(() => {
-    const fetchGroupUsers = async () => {
-      if (!channelId) return;
-      try {
-        const getGroupUsersResult = await getGroupUser({ channelId });
-        const newChargers = [
-          { name: '전체' },
-          ...Array.from(
-            new Set(getGroupUsersResult.result.userList.map(user => user.nickName))
-          ).map(charger => ({ name: charger })),
-        ];
-        setChargers(newChargers);
-      } catch (error) {
-        console.error('그룹 사용자 조회 실패:', error);
-      }
-    };
-
-    fetchGroupUsers();
-  }, [channelId]);
+  }, [channelId, setMyInfo]);
 
   const updateWeeklyIncomplete = useCallback(async () => {
     try {
@@ -197,7 +168,6 @@ export const useHomePage = () => {
   );
 
   return {
-    chargers,
     activeTab,
     setActiveTab,
     handleAction,

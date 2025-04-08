@@ -46,6 +46,8 @@ export const useGetTargetUserIdQuery = (
     ...options,
   });
 
+// todo
+// activeTab을 가져오지 말고 파라미터로 받아오는 것으로 변경
 export const useGetHouseworksQuery = (
   params: GetHouseworkReq,
   options?: Omit<QueryOptions<GetHouseworkRes, Error>, 'queryKey'>
