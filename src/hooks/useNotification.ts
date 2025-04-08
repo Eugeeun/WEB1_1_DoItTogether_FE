@@ -25,8 +25,12 @@ export const useNotification = () => {
   const postFcmCheckMutation = usePostFcmCheckMutation({
     onSuccess: data => {
       setFcmEnabled(data.result.isActive);
+      console.log('상태확인' + data.result.isActive);
     },
-    onError: (error: Error) => console.error('FCM 상태 확인 오류:', error),
+    onError: (error: Error) => {
+      console.error('FCM 상태 확인 오류:', error);
+      setFcmEnabled(false);
+    },
   });
 
   useEffect(() => {
@@ -45,15 +49,14 @@ export const useNotification = () => {
   };
 
   // 서버에서 FCM 활성화 상태 확인
-  const checkFcmStatus = async () => {
-    try {
-      const notificationResult = await setupPushNotifications();
-      if (notificationResult) {
-        postFcmCheckMutation.mutate({ token: notificationResult.token });
-      }
-    } catch (error) {
-      console.error('FCM 상태 확인 오류:', error);
+  const checkFcmStatus = async (): Promise<boolean> => {
+    const notificationResult = await setupPushNotifications();
+    console.log(notificationResult);
+    if (notificationResult) {
+      postFcmCheckMutation.mutate({ token: notificationResult.token });
+      return true;
     }
+    return false;
   };
 
   // 알림 권한 요청
@@ -109,5 +112,6 @@ export const useNotification = () => {
     toggleFCM,
     initNotification,
     setupFCM,
+    isLoading: postFcmCheckMutation.isPending,
   };
 };
