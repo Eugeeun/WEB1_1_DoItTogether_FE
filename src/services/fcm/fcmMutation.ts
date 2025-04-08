@@ -1,10 +1,12 @@
 import { useMutation, MutationOptions } from '@tanstack/react-query';
 import { postFcmToken } from '@/services/fcm/postFcmToken';
+import { PostTokenCheckReq, PostTokenCheckRes } from '@/types/apis/fcmApi';
 import { PostTokenToServerReq, PostTokenToServerRes } from '@/types/apis/fcmApi';
 import { postFcmPush } from './postFcmPush';
 import { PushNotificationReq, PushNotificationRes } from '@/types/apis/fcmApi';
 import { deleteFcmToken } from '@/services/fcm/deleteFcmToken';
 import { DeleteTokenFromServerReq, DeleteTokenFromServerRes } from '@/types/apis/fcmApi';
+import { postFcmCheck } from '@/services/fcm/postFcmCheck';
 
 // options는 사용하는 쪽에서 덮어쓰기가 가능
 export const usePostFcmTokenMutation = (
@@ -18,3 +20,7 @@ export const usePostFcmPushMutation = (
 export const useDeleteFcmTokenMutation = (
   options?: MutationOptions<DeleteTokenFromServerRes, Error, DeleteTokenFromServerReq>
 ) => useMutation({ mutationFn: deleteFcmToken, ...options });
+
+export const usePostFcmCheckMutation = (
+  options?: MutationOptions<PostTokenCheckRes, Error, PostTokenCheckReq>
+) => useMutation({ mutationFn: postFcmCheck, ...options });
