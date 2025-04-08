@@ -7,7 +7,7 @@ import useDevicePadding from '@/hooks/useDevicePadding';
 const ErrorPage = () => {
   const navigate = useNavigate();
   const handleClick = () => {
-    sessionStorage.getItem('access_token') ? navigate('/group-select') : navigate('/');
+    localStorage.getItem('access_token') ? navigate('/group-select') : navigate('/');
   };
   const paddingClass = useDevicePadding();
 

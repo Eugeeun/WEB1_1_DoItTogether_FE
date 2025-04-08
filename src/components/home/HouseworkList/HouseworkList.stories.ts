@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import HouseworkList, { HouseworkListProps } from '@/components/home/HouseworkList/HouseworkList';
 import { fn } from '@storybook/test';
-import { DUMMY_HOUSEWORKS } from '@/mock/mockHomePage';
 
 const meta = {
   title: 'components/home/HouseworkList',
@@ -15,7 +14,6 @@ type Story = StoryObj<HouseworkListProps>;
 
 export const Default: Story = {
   args: {
-    items: DUMMY_HOUSEWORKS,
     handleAction: fn(houseworkId => {
       console.log('Action triggered for housework:', houseworkId);
     }),

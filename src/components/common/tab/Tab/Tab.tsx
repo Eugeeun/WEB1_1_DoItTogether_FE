@@ -9,13 +9,13 @@ interface Charger {
 export interface TabProps {
   activeTab: string;
   handleSetActiveTab: (newActiveTab: string) => void;
-  chargers: Charger[];
+  chargers: Charger[] | undefined;
 }
 
 const Tab = ({ activeTab, handleSetActiveTab, chargers }: TabProps) => {
   return (
     <Tabs defaultValue={activeTab} onValueChange={handleSetActiveTab} value={activeTab}>
-      <TabsList className='h-15 flex w-full justify-start overflow-x-auto overflow-y-hidden rounded-none bg-white p-0 no-scrollbar'>
+      <TabsList className='flex justify-start w-full p-0 overflow-x-auto overflow-y-hidden bg-white rounded-none h-15 no-scrollbar'>
         {chargers?.map(charger => (
           <TabItem key={charger.name} name={charger.name} value={charger.name} />
         ))}

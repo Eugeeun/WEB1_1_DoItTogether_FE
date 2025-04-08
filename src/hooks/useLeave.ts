@@ -17,7 +17,7 @@ export const useLeave = () => {
   const handleDone = async () => {
     try {
       await deleteUser();
-      sessionStorage.removeItem('access_token');
+      localStorage.removeItem('access_token');
       navigate('/');
     } catch (error) {
       console.error('회원 탈퇴 실패:', error);
