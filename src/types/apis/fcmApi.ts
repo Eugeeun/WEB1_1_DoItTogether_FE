@@ -38,3 +38,14 @@ export interface DeleteTokenFromServerReq {
 export interface DeleteTokenFromServerRes extends BaseRes {
   result: {};
 }
+
+/** FCM 토큰 정보 상태 */
+export interface PostTokenCheckReq {
+  token: string;
+}
+
+export interface PostTokenCheckRes extends BaseRes {
+  result: {
+    isActive: boolean;
+  };
+}
