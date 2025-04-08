@@ -1,4 +1,5 @@
 import { deleteFcmToken } from '@/services/fcm/deleteFcmToken';
+import { postFcmCheck } from '@/services/fcm/postFcmCheck';
 import { postFcmToken } from '@/services/fcm/postFcmToken';
 import { setupPushNotifications } from '@/utils/fcm';
 import { useEffect, useState } from 'react';
@@ -11,19 +12,35 @@ export const useNotification = () => {
 
   useEffect(() => {
     checkPermissionStatus();
+    checkFcmStatus();
   }, []);
 
+  // 브라우저 기기 알림 권한 상태 확인
   const checkPermissionStatus = () => {
     if ('Notification' in window) {
       const status = Notification.permission;
       setPermissionStatus(status);
-      setFcmEnabled(status === 'granted');
     } else {
       setPermissionStatus('unsupported');
-      setFcmEnabled(false);
     }
   };
 
+  // 서버에서 FCM 활성화 상태 확인
+  const checkFcmStatus = async () => {
+    try {
+      const notificationResult = await setupPushNotifications();
+      if (notificationResult) {
+        const { token } = notificationResult;
+        const { result } = await postFcmCheck({ token });
+        console.log('상태check' + result.isActive);
+        setFcmEnabled(result.isActive);
+      }
+    } catch (error) {
+      console.error('FCM 상태 확인 오류:', error);
+    }
+  };
+
+  // 알림 권한 요청
   const requestPermission = async (): Promise<boolean> => {
     if (!('Notification' in window)) {
       return false;
@@ -39,6 +56,7 @@ export const useNotification = () => {
     }
   };
 
+  // FCM 토큰 서버에 등록
   const setupFCM = async (): Promise<boolean> => {
     try {
       const notificationResult = await setupPushNotifications();
@@ -55,13 +73,15 @@ export const useNotification = () => {
     }
   };
 
+  // FCM 토큰 서버에서 삭제
   const deleteFCM = async (): Promise<boolean> => {
     try {
       const notificationResult = await setupPushNotifications();
       if (notificationResult) {
         const { token } = notificationResult;
-        await deleteFcmToken({ token });
+        const response = await deleteFcmToken({ token });
         setFcmEnabled(false);
+        console.log(response);
         return true;
       }
       return false;
@@ -71,6 +91,7 @@ export const useNotification = () => {
     }
   };
 
+  // 알림 초기화
   const initNotification = async (): Promise<boolean> => {
     if (permissionStatus === 'granted') {
       return await setupFCM();
@@ -79,22 +100,11 @@ export const useNotification = () => {
       if (granted) {
         return await setupFCM();
       }
-    } else {
-      try {
-        const notificationResult = await setupPushNotifications();
-        if (notificationResult) {
-          const { token, platformType } = notificationResult;
-          await postFcmToken({ token, platformType });
-          return true;
-        }
-      } catch (error) {
-        console.error('FCM 토큰 얻기 실패:', error);
-      }
     }
-
     return false;
   };
 
+  // 알림 토글 (스위치 조작)
   const toggleFCM = async (enable: boolean): Promise<boolean> => {
     if (enable) {
       if (permissionStatus !== 'granted') {
