@@ -1,17 +1,15 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState, useEffect, useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import useHomePageStore from '@/store/useHomePageStore';
 
-import { PAGE_SIZE } from '@/constants/common';
 import { HOUSEWORK_STATUS } from '@/constants/homePage';
 import { IncompleteScoreResponse } from '@/types/apis/houseworkApi';
 
 import { changeHouseworkStatus } from '@/services/housework/changeHouseworkStatus';
 import { deleteHousework } from '@/services/housework/deleteHouswork';
 import { getGroupUser } from '@/services/group/getGroupUser';
-import { getHouseworks } from '@/services/housework/getHouseworks';
 import { getMyGroup } from '@/services/group/getMyGroup';
 import { getMyInfo } from '@/services/user/getMyInfo';
 import { getWeeklyIncomplete } from '@/services/housework/getWeeklyIncomplete';
@@ -27,7 +25,6 @@ export const useHomePage = () => {
     setCurrentGroup,
     setGroups,
     activeDate,
-    homePageNumber,
     activeTab,
     setActiveTab,
     myInfo,
@@ -43,29 +40,8 @@ export const useHomePage = () => {
 
   const { toast } = useToast();
   const navigate = useNavigate();
-
-  const { data: houseworks, refetch } = useQuery({
-    queryKey: ['houseworks', channelId, activeDate],
-    queryFn: () => fetchHouseworks(activeDate),
-    refetchOnWindowFocus: true,
-  });
-
-  const fetchHouseworks = useCallback(
-    async (date: string) => {
-      try {
-        const getHouseworksResult = await getHouseworks({
-          channelId,
-          targetDate: date,
-          pageNumber: homePageNumber,
-          pageSize: PAGE_SIZE,
-        });
-        return getHouseworksResult.result.responses;
-      } catch (error) {
-        console.error('집안일 목록 가져오기 실패:', error);
-      }
-    },
-    [channelId, homePageNumber]
-  );
+  const queryClient = useQueryClient();
+  const houseworks = queryClient.getQueryData<Housework[]>(['houseworks', channelId]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -154,12 +130,12 @@ export const useHomePage = () => {
         handleError(error);
       }
     },
-    [channelId, houseworks, myInfo, refetch, updateWeeklyIncomplete, toast]
+    [channelId, houseworks, myInfo, updateWeeklyIncomplete, toast]
   );
 
   const handleStatusChange = async (housework: Housework) => {
     await changeHouseworkStatus({ channelId, houseworkId: housework.houseworkId });
-    refetch();
+    queryClient.invalidateQueries({ queryKey: ['houseworks'] });
     await updateWeeklyIncomplete();
   };
 
@@ -212,24 +188,18 @@ export const useHomePage = () => {
       try {
         await deleteHousework({ channelId, houseworkId });
         toast({ title: '집안일이 삭제되었습니다' });
-        refetch();
+        queryClient.invalidateQueries({ queryKey: ['houseworks'] });
       } catch (error) {
         console.error('집안일 삭제 실패:', error);
       }
     },
-    [channelId, refetch, toast]
-  );
-
-  const filteredHouseworks = useMemo(
-    () => houseworks?.filter(item => item.assignee === activeTab || activeTab === '전체'),
-    [houseworks, activeTab]
+    [channelId, toast]
   );
 
   return {
     chargers,
     activeTab,
     setActiveTab,
-    filteredHouseworks,
     handleAction,
     handleEdit,
     handleDelete,

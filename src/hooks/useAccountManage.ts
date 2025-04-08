@@ -13,7 +13,7 @@ export const useAccountManage = () => {
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem('access_token');
+    localStorage.removeItem('access_token');
     navigate('/');
   };
 
