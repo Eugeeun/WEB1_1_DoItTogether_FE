@@ -8,12 +8,7 @@ import AccountSetBtn from '@/components/my/AccountSetBtn/AccountSetBtn';
 
 const GroupSelectPage = () => {
   const paddingClass = useDevicePadding();
-  const { isLoading, groups, handleMakeGroupBtnClick, handleInvitedBtnClick, handleClick } =
-    useGroupSelect();
-
-  if (isLoading) {
-    return <></>;
-  }
+  const { handleMakeGroupBtnClick, handleInvitedBtnClick, handleClick } = useGroupSelect();
 
   return (
     <div className={`relative flex h-screen flex-col`}>
@@ -26,8 +21,8 @@ const GroupSelectPage = () => {
         <AccountSetBtn />
       </div>
       <GroupSelectTitle />
-      <div className='flex flex-1 flex-col px-5 py-4'>
-        <GroupList groups={groups} handleClick={handleClick} />
+      <div className='flex flex-col flex-1 px-5 py-4'>
+        <GroupList handleClick={handleClick} />
       </div>
       <div className={`sticky bottom-6 ${paddingClass} flex gap-x-4 px-5`}>
         <Button
