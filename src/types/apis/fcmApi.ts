@@ -10,6 +10,9 @@ export interface PushNotificationReq {
   notificationRequest: {
     title: string;
     content: string;
+    data: {
+      [key: string]: string; // ex: data1: 'data1'
+    };
   };
 }
 

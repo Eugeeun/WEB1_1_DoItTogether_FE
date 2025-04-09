@@ -116,6 +116,9 @@ export const useHomePage = () => {
       notificationRequest: {
         title: `${myInfo.nickName}님이 당신을 칭찬했습니다.`,
         content: `${housework.task}을(를) 완벽히 수행하셨군요.`,
+        data: {
+          url: `/main/${channelId}`,
+        },
       },
     });
     toast({ title: `${housework.assignee}님을 칭찬했어요.` });
@@ -129,6 +132,9 @@ export const useHomePage = () => {
       notificationRequest: {
         title: `${myInfo.nickName}님이 당신을 찔렀습니다.`,
         content: `${housework.task}을(를) 완료해주세요.`,
+        data: {
+          url: `/main/${channelId}`,
+        },
       },
     });
     toast({ title: `${housework.assignee}님을 찔렀어요` });

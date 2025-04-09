@@ -6,8 +6,10 @@ self.addEventListener('notificationclick', event => {
 
   event.notification.close();
 
+  const url = event.notification.data.url;
+
   // 알림 클릭 시 특정 URL로 이동
-  event.waitUntil(clients.openWindow('https://doit-together.vercel.app/'));
+  event.waitUntil(clients.openWindow('https://doit-together.vercel.app/' + url));
 });
 
 // 서비스 워커 파일
@@ -22,12 +24,11 @@ self.addEventListener('activate', function () {
 self.addEventListener('push', function (e) {
   if (!e.data.json()) return;
   const resultData = e.data.json().notification;
+
   const notificationTitle = resultData.title;
   const notificationOptions = {
     body: resultData.body,
+    data: resultData.data,
   };
-  console.log(resultData.title, {
-    body: resultData.body,
-  });
   e.waitUntil(self.registration.showNotification(notificationTitle, notificationOptions));
 });
