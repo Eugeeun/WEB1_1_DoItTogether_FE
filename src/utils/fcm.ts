@@ -15,22 +15,31 @@ const app = initializeApp(firebaseConfig);
 // Firebase Messaging 지원 여부 확인 후 초기화
 let messaging: Messaging | null = null;
 
-(async () => {
+const initializeMessaging = async (): Promise<Messaging | null> => {
   if (typeof window !== 'undefined' && (await isSupported())) {
     messaging = getMessaging(app);
+    return messaging;
   } else {
     console.warn('Firebase Messaging is not supported in this environment.');
+    return null;
   }
-})();
+};
+
+// Initialize messaging immediately
+const messagingPromise = initializeMessaging();
 
 export const requestForToken = async (): Promise<string | null> => {
-  if (!messaging) {
+  const messagingInstance = await messagingPromise;
+
+  if (!messagingInstance) {
     console.warn('Messaging instance is not available.');
     return null;
   }
 
   try {
-    const currentToken = await getToken(messaging, { vapidKey: import.meta.env.VITE_VAPID_KEY });
+    const currentToken = await getToken(messagingInstance, {
+      vapidKey: import.meta.env.VITE_VAPID_KEY,
+    });
     if (currentToken) {
       return currentToken;
     } else {

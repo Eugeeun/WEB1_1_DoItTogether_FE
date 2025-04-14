@@ -1,22 +1,24 @@
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export const useAccountManage = () => {
   const navigate = useNavigate();
-  const { channelId } = useParams();
   const [showAlert, setShowAlert] = useState(false);
+  const location = useLocation();
 
   const handleBack = () => {
-    navigate(`/main/${channelId}/my-page`);
+    location.state && location.state.from
+      ? navigate(location.state.from)
+      : navigate('/group-select');
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem('access_token');
+    localStorage.removeItem('access_token');
     navigate('/');
   };
 
   const handleLeave = () => {
-    navigate(`/my-page/leave/${channelId}`);
+    navigate(`/my-page/leave`);
   };
 
   const onConfirm = () => {

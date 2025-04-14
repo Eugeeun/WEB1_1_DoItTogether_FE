@@ -141,7 +141,7 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: 'my-page/account-manage/:channelId',
+        path: 'my-page/account-manage',
         element: (
           <PrivateRouter>
             <AccountManagePage />
@@ -149,7 +149,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'my-page/leave/:channelId',
+        path: 'my-page/leave',
         element: (
           <PrivateRouter>
             <LeavePage />

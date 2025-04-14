@@ -10,6 +10,9 @@ export interface PushNotificationReq {
   notificationRequest: {
     title: string;
     content: string;
+    data: {
+      [key: string]: string; // ex: data1: 'data1'
+    };
   };
 }
 
@@ -27,4 +30,25 @@ export interface PostTokenToServerReq {
 
 export interface PostTokenToServerRes extends BaseRes {
   result: {};
+}
+
+/** FCM 토큰 삭제 */
+export interface DeleteTokenFromServerReq {
+  /** 삭제할 토큰 값 */
+  token: string;
+}
+
+export interface DeleteTokenFromServerRes extends BaseRes {
+  result: {};
+}
+
+/** FCM 토큰 정보 상태 */
+export interface PostTokenCheckReq {
+  token: string;
+}
+
+export interface PostTokenCheckRes extends BaseRes {
+  result: {
+    isActive: boolean;
+  };
 }

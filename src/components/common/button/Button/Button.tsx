@@ -43,14 +43,14 @@ const Button = ({
       disabled={disabled}
     >
       {icon ? (
-        <div className='flex w-full items-center'>
+        <div className='flex w-full items-center justify-center gap-2'>
           {label !== '' ? (
             <>
-              <span className='ml-5'>{icon}</span>
-              <span className='flex-1 text-center'>{label}</span>
+              <span>{icon}</span>
+              <span>{label}</span>
             </>
           ) : (
-            <span className='flex flex-1 justify-center'>{icon}</span>
+            <span>{icon}</span>
           )}
         </div>
       ) : (
