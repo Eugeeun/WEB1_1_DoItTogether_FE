@@ -1,20 +1,20 @@
 /**
  * 주어진 날짜 문자열을 "YYYY-MM-DD" 형식의 문자열로 변환합니다.
- * 
+ *
  * @param date - 변환할 날짜 문자열
  * @return "YYYY-MM-DD" 형식의 문자열
  */
-export function formatDateToISO(date: string):string {
+export function formatDateToISO(date: string): string {
   return date.replace(/(\d{4})년 (\d{1,2})월 (\d{1,2})일/, (_, year, month, day) => {
     const formattedMonth = month.padStart(2, '0');
     const formattedDay = day.padStart(2, '0');
     return `${year}-${formattedMonth}-${formattedDay}`;
   });
-};
+}
 
 /**
  * 주어진 Date 객체를 "YYYY-MM-DD" 형식의 문자열로 변환합니다.
- * 
+ *
  * @param date - 변환할 Date 객체
  * @return "YYYY-MM-DD" 형식의 문자열
  */
@@ -27,7 +27,7 @@ export function getFormattedDate(date: Date): string {
 
 /**
  * 특정 날짜가 속한 년도, 월, 주차를 문자열로 반환합니다.
- * 
+ *
  * @param date - 확인할 날짜 (Date 객체)
  * @return 년도, 월, 주차 정보가 포함된 문자열
  */
@@ -48,6 +48,14 @@ export function getWeekText(date: Date) {
     4: '넷째 주',
     5: '다섯째 주',
   };
+
+  if (weekNumber > 5 || !weekLabels[weekNumber]) {
+    const nextMonth = new Date(date);
+    nextMonth.setDate(1); // 현재 달의 1일로 설정
+    nextMonth.setMonth(nextMonth.getMonth() + 1); // 다음 달로 이동
+
+    return `${nextMonth.getFullYear()}년 ${new Intl.DateTimeFormat('ko-KR', { month: 'long' }).format(nextMonth)} 첫째 주`;
+  }
 
   return `${year}년 ${new Intl.DateTimeFormat('ko-KR', { month: 'long' }).format(date)} ${weekLabels[weekNumber]}`;
 }
