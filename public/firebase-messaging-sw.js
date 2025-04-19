@@ -9,7 +9,7 @@ self.addEventListener('notificationclick', event => {
   const url = event.notification.data.url;
 
   console.log(event.notification.data);
-
+  
   // 알림 클릭 시 특정 URL로 이동
   event.waitUntil(clients.openWindow('https://doit-together.vercel.app/' + url));
 });
