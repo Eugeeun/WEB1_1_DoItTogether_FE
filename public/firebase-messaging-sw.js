@@ -34,6 +34,7 @@ self.addEventListener('push', function (e) {
   };
 
   console.log(resultData);
+  console.log(e.data.json());
 
   e.waitUntil(self.registration.showNotification(notificationTitle, notificationOptions));
 });
