@@ -3,10 +3,8 @@
 // 알림 클릭 이벤트 처리
 self.addEventListener('notificationclick', event => {
   console.log('[firebase-messaging-sw.js] Notification click Received.');
-
   event.notification.close();
-
-  console.log(e.data.json());
+  const url = event.notification.data;
 
   // 알림 클릭 시 특정 URL로 이동
   event.waitUntil(clients.openWindow('https://doit-together.vercel.app/' + url));
