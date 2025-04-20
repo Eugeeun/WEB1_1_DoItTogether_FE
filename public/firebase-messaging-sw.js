@@ -4,10 +4,10 @@
 self.addEventListener('notificationclick', event => {
   console.log('[firebase-messaging-sw.js] Notification click Received.');
   event.notification.close();
-  const url = event.notification.data;
+  // const url = event.notification.data;
 
   // 알림 클릭 시 특정 URL로 이동
-  event.waitUntil(clients.openWindow('https://doit-together.vercel.app/' + url));
+  event.waitUntil(clients.openWindow('https://doit-together.vercel.app/'));
 });
 
 // 서비스 워커 파일
