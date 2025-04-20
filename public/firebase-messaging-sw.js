@@ -6,9 +6,7 @@ self.addEventListener('notificationclick', event => {
 
   event.notification.close();
 
-  const url = event.notification.data.url;
-
-  console.log(event.notification.data);
+  console.log(e.data.json());
 
   // 알림 클릭 시 특정 URL로 이동
   event.waitUntil(clients.openWindow('https://doit-together.vercel.app/' + url));
