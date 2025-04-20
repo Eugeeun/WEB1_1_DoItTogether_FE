@@ -25,16 +25,13 @@ self.addEventListener('activate', function () {
 
 self.addEventListener('push', function (e) {
   if (!e.data.json()) return;
-  const resultData = e.data.json().notification;
+  const resultData = e.data.json();
 
-  const notificationTitle = resultData.title;
+  const notificationTitle = resultData.notification.title;
   const notificationOptions = {
-    body: resultData.body,
-    data: resultData.data,
+    body: resultData.notification.body,
+    data: resultData.data.url,
   };
-
-  console.log(resultData);
-  console.log(e.data.json());
 
   e.waitUntil(self.registration.showNotification(notificationTitle, notificationOptions));
 });
