@@ -1,25 +1,20 @@
 import React from 'react';
 import NoListIcon from '@/components/common/icon/NoListIcon';
-import { useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import { Housework } from '@/types/apis/houseworkApi';
 import { PAGE_SIZE } from '@/constants/common';
 import useHomePageStore from '@/store/useHomePageStore';
+import { useGetHouseworksQuery } from '@/services/housework/houseworkQuery';
 interface NoListProps {}
 
 const NoList: React.FC<NoListProps> = ({}) => {
   const { channelId } = useParams();
   const { activeDate, homePageNumber } = useHomePageStore();
-  const queryClient = useQueryClient();
-  const houseworks = queryClient.getQueryData<Housework[]>([
-    'houseworks',
-    {
-      channelId: Number(channelId),
-      targetDate: activeDate,
-      pageNumber: homePageNumber,
-      pageSize: PAGE_SIZE,
-    },
-  ]);
+  const { data: houseworks } = useGetHouseworksQuery({
+    channelId: Number(channelId),
+    targetDate: activeDate,
+    pageNumber: homePageNumber,
+    pageSize: PAGE_SIZE,
+  });
 
   if (houseworks && houseworks.length > 0) {
     return null;
