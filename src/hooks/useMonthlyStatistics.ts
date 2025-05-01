@@ -13,7 +13,6 @@ const useMonthlyStatistics = () => {
     if (!channelId || isNaN(Number(channelId)) || !currentMonth) return;
 
     try {
-      console.log(currentMonth, 'mvpData');
       const response = await getMonthlyMVP({
         channelId: Number(channelId),
         targetMonth: currentMonth,
