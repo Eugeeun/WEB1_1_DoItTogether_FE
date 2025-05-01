@@ -3,15 +3,11 @@
 // 알림 클릭 이벤트 처리
 self.addEventListener('notificationclick', event => {
   console.log('[firebase-messaging-sw.js] Notification click Received.');
-
   event.notification.close();
+  // const url = event.notification.data;
 
-  const url = event.notification.data.url;
-
-  console.log(event.notification.data);
-  
   // 알림 클릭 시 특정 URL로 이동
-  event.waitUntil(clients.openWindow('https://doit-together.vercel.app/' + url));
+  event.waitUntil(clients.openWindow('https://doit-together.vercel.app/'));
 });
 
 // 서비스 워커 파일
@@ -25,15 +21,13 @@ self.addEventListener('activate', function () {
 
 self.addEventListener('push', function (e) {
   if (!e.data.json()) return;
-  const resultData = e.data.json().notification;
+  const resultData = e.data.json();
 
-  const notificationTitle = resultData.title;
+  const notificationTitle = resultData.notification.title;
   const notificationOptions = {
-    body: resultData.body,
-    data: resultData.data,
+    body: resultData.notification.body,
+    data: resultData.data.url,
   };
-
-  console.log(resultData);
 
   e.waitUntil(self.registration.showNotification(notificationTitle, notificationOptions));
 });
