@@ -32,6 +32,8 @@ const MonthlyGrass = React.memo(({ onMonthChange, onDataChange }: MonthlyGrassPr
         const month = String(lastDayCurrentMonth.getMonth() + 1).padStart(2, '0');
         const monthKey = `${year}-${month}`;
 
+        onMonthChange(monthKey);
+
         const response = await getMonthlyScore({
           channelId,
           targetMonth: monthKey,
@@ -71,7 +73,6 @@ const MonthlyGrass = React.memo(({ onMonthChange, onDataChange }: MonthlyGrassPr
       const year = activeStartDate.getFullYear();
       const month = String(activeStartDate.getMonth() + 1).padStart(2, '0');
       const monthKey = `${year}-${month}`;
-      console.log('monthKey', monthKey);
 
       try {
         const response = await getMonthlyScore({

@@ -9,21 +9,11 @@ const useMonthlyStatistics = () => {
   const [monthlyData, setMonthlyData] = useState<MonthlyDateScore[]>([]);
   const [mvpData, setMvpData] = useState<any>(null);
 
-  const getCurrentMonth = () => {
-    const date = new Date();
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-  };
-
-  useEffect(() => {
-    if (channelId) {
-      setCurrentMonth(getCurrentMonth());
-    }
-  }, [channelId, getCurrentMonth]);
-
   const fetchMonthlyMVP = useCallback(async () => {
     if (!channelId || isNaN(Number(channelId)) || !currentMonth) return;
 
     try {
+      console.log(currentMonth, 'mvpData');
       const response = await getMonthlyMVP({
         channelId: Number(channelId),
         targetMonth: currentMonth,
@@ -41,6 +31,7 @@ const useMonthlyStatistics = () => {
 
   const handleMonthChange = useCallback((monthKey: string) => {
     setCurrentMonth(monthKey);
+    setMvpData(null);
   }, []);
 
   const handleDataChange = useCallback((data: MonthlyDateScore[]) => {
