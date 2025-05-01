@@ -1,28 +1,28 @@
 import { getMonthlyMVP } from '@/services/statistics/getMonthlyMVP';
 import { MonthlyDateScore } from '@/types/apis/statisticsApi';
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 
 const useMonthlyStatistics = () => {
-  const calculatePreviousMonth = () => {
-    const today = new Date();
-    const firstDayCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    const lastDayPreviousMonth = new Date(firstDayCurrentMonth.getTime() - 1);
-    return `${lastDayPreviousMonth.getFullYear()}-${String(lastDayPreviousMonth.getMonth() + 1).padStart(2, '0')}`;
-  };
-
-  const previousMonth = useMemo(() => calculatePreviousMonth(), []);
-
-  const [currentMonth, setCurrentMonth] = useState<string>(previousMonth);
+  const [currentMonth, setCurrentMonth] = useState<string>('');
+  const { channelId } = useParams();
   const [monthlyData, setMonthlyData] = useState<MonthlyDateScore[]>([]);
   const [mvpData, setMvpData] = useState<any>(null);
-  const { channelId } = useParams();
+
+  const getCurrentMonth = () => {
+    const date = new Date();
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+  };
 
   useEffect(() => {
-    fetchMonthlyMVP();
-  }, [currentMonth, channelId]);
+    if (channelId) {
+      setCurrentMonth(getCurrentMonth());
+    }
+  }, [channelId, getCurrentMonth]);
 
   const fetchMonthlyMVP = useCallback(async () => {
+    if (!channelId || isNaN(Number(channelId)) || !currentMonth) return;
+
     try {
       const response = await getMonthlyMVP({
         channelId: Number(channelId),
@@ -31,24 +31,17 @@ const useMonthlyStatistics = () => {
       setMvpData(response.result);
     } catch (error) {
       console.error('MVP 데이터 조회 실패:', error);
+      setMvpData(null);
     }
   }, [channelId, currentMonth]);
 
-  const handleMonthChange = useCallback(
-    async (monthKey: string) => {
-      setCurrentMonth(monthKey);
-      try {
-        const response = await getMonthlyMVP({
-          channelId: Number(channelId),
-          targetMonth: monthKey,
-        });
-        setMvpData(response.result);
-      } catch (error) {
-        console.error('MVP 데이터 조회 실패:', error);
-      }
-    },
-    [channelId]
-  );
+  useEffect(() => {
+    fetchMonthlyMVP();
+  }, [fetchMonthlyMVP]);
+
+  const handleMonthChange = useCallback((monthKey: string) => {
+    setCurrentMonth(monthKey);
+  }, []);
 
   const handleDataChange = useCallback((data: MonthlyDateScore[]) => {
     setMonthlyData(data);
