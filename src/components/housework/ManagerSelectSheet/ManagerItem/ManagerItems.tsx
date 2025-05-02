@@ -9,6 +9,7 @@ interface ManagerItemsProps {
   members: User[];
   isAiCardOpen: boolean;
   setIsAiCardOpen: Dispatch<SetStateAction<boolean>>;
+  selectedRef?: React.RefObject<HTMLLIElement>;
 }
 
 const ManagerItems: React.FC<ManagerItemsProps> = ({
@@ -17,6 +18,7 @@ const ManagerItems: React.FC<ManagerItemsProps> = ({
   members,
   isAiCardOpen,
   setIsAiCardOpen,
+  selectedRef,
 }) => {
   const { setNickName, setStatus } = useAddHouseWorkStore();
 
@@ -48,6 +50,7 @@ const ManagerItems: React.FC<ManagerItemsProps> = ({
       {members.map(member => (
         <ManagerItem
           key={member.userId}
+          ref={selectedValue === member.userId ? selectedRef : null}
           name={member.nickName}
           handleClick={createHandleClick(member.userId, member.nickName)}
           selectState={selectedValue === member.userId ? 'selected' : 'default'}
