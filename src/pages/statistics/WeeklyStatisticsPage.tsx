@@ -8,13 +8,17 @@ import useWeeklyStateStore from '@/store/useWeeklyStatisticsStore';
 import useWeeklyStatistics from '@/hooks/useWeeklyStatistics';
 import MetaTags from '@/components/common/metaTags/MetaTags';
 import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const WeeklyStatisticsPage = () => {
   const { currentDate, totalCountData, scoreCountData } = useWeeklyStateStore();
   const { handlePrevWeek, handleNextWeek } = useWeeklyStatistics();
   const { channelId } = useParams();
 
-  console.log('날짜: ', currentDate, '랭킹: ', scoreCountData);
+  useEffect(() => {
+    console.log('날짜 업데이트:', currentDate);
+    console.log('랭킹 데이터 업데이트:', scoreCountData);
+  }, [currentDate, scoreCountData]);
 
   return (
     <>
