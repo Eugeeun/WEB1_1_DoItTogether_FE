@@ -14,6 +14,8 @@ const WeeklyStatisticsPage = () => {
   const { handlePrevWeek, handleNextWeek } = useWeeklyStatistics();
   const { channelId } = useParams();
 
+  console.log('날짜: ', currentDate, '랭킹: ', scoreCountData);
+
   return (
     <>
       <MetaTags
