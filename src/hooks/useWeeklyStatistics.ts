@@ -41,6 +41,14 @@ const useWeeklyStatistics = () => {
   const getScoreCountData = async (targetDate: string) => {
     try {
       const response = await getWeeklyScore({ channelId, targetDate });
+
+      // Check if the response is empty
+      console.log(
+        targetDate,
+        '주간 통계 랭킹 데이터 조회 성공',
+        response.result.completeScoreSortedResponse
+      );
+
       setScoreCountData(response.result.completeScoreSortedResponse);
     } catch (error) {
       console.error('주간 통계 랭킹 데이터 조회 실패', error);
