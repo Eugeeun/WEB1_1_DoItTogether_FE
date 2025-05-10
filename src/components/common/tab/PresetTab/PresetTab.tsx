@@ -106,19 +106,19 @@ const PresetTab = ({
           ))
         ) : (
           <div
-            className={` ${isBottomSheet ? 'h-[250px]' : 'h-full flex-1'} flex items-center justify-center overflow-hidden`}
+            className={`${isBottomSheet ? 'h-[250px]' : 'h-[calc(100vh-250px)]'} grid place-items-center overflow-hidden`}
           >
             <div className='flex flex-col items-center whitespace-pre-line'>
               {!searchQuery && <NoHouseWorkIcon />}
               <p className='text-center text-gray3 font-subhead'>
                 {searchQuery ? (
-                  <>
+                  <p className='font-body'>
                     찾으시는 집안일이 없어요.
                     <br />
                     <span className='text-main'>[그룹 메뉴 &gt; 프리셋 관리 &gt; 사용자 정의]</span>
                     에서
                     <br />새 집안일을 추가해보세요.
-                  </>
+                  </p>
                 ) : (
                   <>
                     현재 집안일 목록이 없어요
@@ -172,13 +172,13 @@ const PresetTab = ({
             ))
           ) : (
             <div
-              className={` ${isBottomSheet ? 'h-[250px]' : 'h-full flex-1'} flex items-center justify-center overflow-hidden`}
+              className={`${isBottomSheet ? 'h-[250px]' : 'h-[calc(100vh-250px)]'} grid place-items-center overflow-hidden`}
             >
               <div className='flex flex-col items-center whitespace-pre-line'>
                 {!searchQuery && <NoHouseWorkIcon />}
                 <p className='text-center text-gray3 font-subhead'>
                   {searchQuery ? (
-                    <>
+                    <p className='font-body'>
                       찾으시는 집안일이 없어요.
                       <br />
                       <span className='text-main'>
@@ -186,7 +186,7 @@ const PresetTab = ({
                       </span>
                       에서
                       <br />새 집안일을 추가해보세요.
-                    </>
+                    </p>
                   ) : (
                     <>
                       현재 집안일 목록이 없어요
