@@ -55,7 +55,11 @@ const PresetSettingPage = () => {
         </>
       ) : (
         <div className='mt-5 flex-1'>
-          <PresetTab presetData={presetData} isPresetSettingCustom={false} />
+          <PresetTab
+            searchQuery={searchQuery}
+            presetData={presetData}
+            isPresetSettingCustom={false}
+          />
         </div>
       )}
     </div>
