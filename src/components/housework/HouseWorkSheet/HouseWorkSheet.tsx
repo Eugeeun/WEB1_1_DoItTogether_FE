@@ -106,7 +106,7 @@ const HouseWorkSheet: React.FC<HouseWorkSheetProps> = ({
 
   return (
     <BottomSheet isOpen={isOpen} setOpen={setOpen} title='집안일 선택'>
-      <div className='flex min-h-96 flex-col gap-y-6 pb-6'>
+      <div className='flex min-h-96 flex-col gap-y-4 pb-6'>
         <section aria-label='집안일 할당 바텀 시트' className='flex flex-1 flex-col gap-6'>
           <SearchInput />
           <div>
