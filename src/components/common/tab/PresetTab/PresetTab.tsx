@@ -30,6 +30,7 @@ interface PresetTabProps {
   selectedItem?: number | null;
   handleDeleteClick?: (presetCategoryId: number, itemId: number) => void;
   handleClick?: (id: number, description: string, category: string) => void;
+  searchQuery?: string;
 }
 
 const PresetTab = ({
@@ -42,6 +43,7 @@ const PresetTab = ({
   isBottomSheet = false,
   handleClick,
   selectedItem,
+  searchQuery = '',
 }: PresetTabProps) => {
   const allPresetData = {
     category: PresetCategory.ALL,
@@ -52,6 +54,10 @@ const PresetTab = ({
         presetCategoryId: categoryList.presetCategoryId,
       }))
     ),
+  };
+
+  const filterItems = (items: Array<{ name: string }>) => {
+    return items.filter(item => item.name.toLowerCase().includes(searchQuery));
   };
 
   return (
@@ -71,35 +77,37 @@ const PresetTab = ({
         value={allPresetData.category}
         className={`${isBottomSheet ? 'h-[250px]' : 'h-auto'} overflow-y-auto no-scrollbar`}
       >
-        {allPresetData.items.length ? (
-          <>
-            {allPresetData.items.map(item => (
-              <div key={item.presetItemId}>
-                <PresetItem
-                  category={item.category}
-                  housework={item.name}
-                  handleSelectClick={() =>
-                    handleClick && handleClick(item.presetItemId, item.name, item.category)
-                  }
-                  isBottomSheet={isBottomSheet}
-                  isPresetSettingCustom={isPresetSettingCustom}
-                  isShowDeleteBtn={deleteButtonStates[item.presetItemId]} //각 아이템의 boolean값이 들어간다.
-                  handleDeleteClick={
-                    handleDeleteClick &&
-                    (() => handleDeleteClick(item.presetCategoryId, item.presetItemId))
-                  }
-                  isSelected={selectedItem === item.presetItemId}
-                />
-              </div>
-            ))}
-          </>
+        {filterItems(allPresetData.items).length ? (
+          filterItems(allPresetData.items).map(item => (
+            <div key={item.presetItemId}>
+              <PresetItem
+                category={item.category}
+                housework={item.name}
+                handleSelectClick={() =>
+                  handleClick && handleClick(item.presetItemId, item.name, item.category)
+                }
+                isBottomSheet={isBottomSheet}
+                isPresetSettingCustom={isPresetSettingCustom}
+                isShowDeleteBtn={deleteButtonStates[item.presetItemId]}
+                handleDeleteClick={
+                  handleDeleteClick &&
+                  (() => handleDeleteClick(item.presetCategoryId, item.presetItemId))
+                }
+                isSelected={selectedItem === item.presetItemId}
+              />
+            </div>
+          ))
         ) : (
           <div
             className={`${isBottomSheet ? 'h-[calc(100vh-400px)]' : 'h-[calc(100vh-320px)]'} flex items-center justify-center`}
           >
             <div className='flex flex-col items-center whitespace-pre-line'>
               <NoHouseWorkIcon />
-              <p className='text-center text-gray3 font-subhead'>{`현재 집안일 목록이 없어요\n 새로운 목록을 만들어보세요`}</p>
+              <p className='text-center text-gray3 font-subhead'>
+                {searchQuery
+                  ? `"${searchQuery}" 검색 결과가 없습니다`
+                  : `현재 집안일 목록이 없어요\n 새로운 목록을 만들어보세요`}
+              </p>
             </div>
           </div>
         )}

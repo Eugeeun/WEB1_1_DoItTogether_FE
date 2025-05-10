@@ -2,26 +2,31 @@ import { SearchIcon } from '@/components/common/icon';
 import InputBox from '@/components/common/input/InputBox';
 import { useState } from 'react';
 
-export interface SearchInputProps {}
+export interface SearchInputProps {
+  handleChange?: (val: string) => void;
+}
 
-const SearchInput = ({}: SearchInputProps) => {
+const SearchInput = ({ handleChange }: SearchInputProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const [value, setValue] = useState('');
   console.log('value', value);
 
-  const handleChange = (val: string) => {
+  const handleInputChange = (val: string) => {
     setValue(val);
+    handleChange?.(val);
   };
 
   const handleCancel = () => {
     setValue('');
+    handleChange?.('');
   };
 
   return (
     <div className='flex items-center gap-2 rounded-lg bg-white px-5'>
       <InputBox
+        value={value}
         disabled={false}
-        handleChange={handleChange}
+        handleChange={handleInputChange}
         leftIcon={<SearchIcon className={isFocused ? 'text-main' : 'text-gray3'} />}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
