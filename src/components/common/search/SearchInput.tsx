@@ -26,7 +26,7 @@ const SearchInput = ({}: SearchInputProps) => {
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       />
-      <button className='whitespace-nowrap text-black font-label' onClick={handleCancel}>
+      <button className='whitespace-nowrap px-2 text-black font-label' onClick={handleCancel}>
         취소
       </button>
     </div>
