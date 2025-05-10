@@ -106,7 +106,7 @@ const PresetTab = ({
           ))
         ) : (
           <div
-            className={`${isBottomSheet ? 'h-[calc(100vh-400px)]' : 'h-[calc(100vh-320px)]'} flex items-center justify-center`}
+            className={` ${isBottomSheet ? 'h-[250px]' : 'h-auto'} flex h-full min-h-full items-center justify-center overflow-hidden`}
           >
             <div className='flex flex-col items-center whitespace-pre-line'>
               {!searchQuery && <NoHouseWorkIcon />}
@@ -172,7 +172,7 @@ const PresetTab = ({
             ))
           ) : (
             <div
-              className={`${isBottomSheet ? 'h-[calc(100vh-400px)]' : 'h-[calc(100vh-320px)]'} flex items-center justify-center`}
+              className={` ${isBottomSheet ? 'h-[250px]' : 'h-auto'} flex h-full min-h-full items-center justify-center overflow-hidden`}
             >
               <div className='flex flex-col items-center whitespace-pre-line'>
                 {!searchQuery && <NoHouseWorkIcon />}
