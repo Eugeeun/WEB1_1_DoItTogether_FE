@@ -20,6 +20,13 @@ interface PresetList {
   presetItemList: Array<PresetItem>;
 }
 
+interface PresetItemType {
+  presetItemId: number;
+  name: string;
+  category: string;
+  presetCategoryId: number;
+}
+
 interface PresetTabProps {
   presetData: PresetList[];
   cateActiveTab?: string;
@@ -56,7 +63,7 @@ const PresetTab = ({
     ),
   };
 
-  const filterItems = (items: Array<{ name: string }>) => {
+  const filterItems = (items: PresetItemType[]) => {
     return items.filter(item => item.name.toLowerCase().includes(searchQuery));
   };
 
@@ -102,11 +109,23 @@ const PresetTab = ({
             className={`${isBottomSheet ? 'h-[calc(100vh-400px)]' : 'h-[calc(100vh-320px)]'} flex items-center justify-center`}
           >
             <div className='flex flex-col items-center whitespace-pre-line'>
-              <NoHouseWorkIcon />
+              {!searchQuery && <NoHouseWorkIcon />}
               <p className='text-center text-gray3 font-subhead'>
-                {searchQuery
-                  ? `"${searchQuery}" 검색 결과가 없습니다`
-                  : `현재 집안일 목록이 없어요\n 새로운 목록을 만들어보세요`}
+                {searchQuery ? (
+                  <>
+                    찾으시는 집안일이 없어요.
+                    <br />
+                    <span className='text-main'>[그룹 메뉴 &gt; 프리셋 관리 &gt; 사용자 정의]</span>
+                    에서
+                    <br />새 집안일을 추가해보세요.
+                  </>
+                ) : (
+                  <>
+                    현재 집안일 목록이 없어요
+                    <br />
+                    새로운 목록을 만들어보세요
+                  </>
+                )}
               </p>
             </div>
           </div>
@@ -119,21 +138,33 @@ const PresetTab = ({
           value={categoryList.category}
           className={`${isBottomSheet ? 'h-[250px]' : 'h-auto'} overflow-y-auto no-scrollbar`}
         >
-          {categoryList.presetItemList.length ? (
-            categoryList.presetItemList.map(item => (
+          {filterItems(
+            categoryList.presetItemList.map(item => ({
+              ...item,
+              category: categoryList.category,
+              presetCategoryId: categoryList.presetCategoryId,
+            }))
+          ).length ? (
+            filterItems(
+              categoryList.presetItemList.map(item => ({
+                ...item,
+                category: categoryList.category,
+                presetCategoryId: categoryList.presetCategoryId,
+              }))
+            ).map(item => (
               <div key={item.presetItemId}>
                 <PresetItem
-                  category={categoryList.category}
+                  category={item.category}
                   housework={item.name}
                   handleSelectClick={() =>
-                    handleClick && handleClick(item.presetItemId, item.name, categoryList.category)
+                    handleClick?.(item.presetItemId, item.name, item.category)
                   }
                   isBottomSheet={isBottomSheet}
                   isPresetSettingCustom={isPresetSettingCustom}
                   isShowDeleteBtn={deleteButtonStates[item.presetItemId]}
                   handleDeleteClick={
                     handleDeleteClick &&
-                    (() => handleDeleteClick(categoryList.presetCategoryId, item.presetItemId))
+                    (() => handleDeleteClick(item.presetCategoryId, item.presetItemId))
                   }
                   isSelected={selectedItem === item.presetItemId}
                 />
@@ -144,8 +175,26 @@ const PresetTab = ({
               className={`${isBottomSheet ? 'h-[calc(100vh-400px)]' : 'h-[calc(100vh-320px)]'} flex items-center justify-center`}
             >
               <div className='flex flex-col items-center whitespace-pre-line'>
-                <NoHouseWorkIcon />
-                <p className='text-center text-gray3 font-subhead'>{`현재 집안일 목록이 없어요\n 새로운 목록을 만들어보세요`}</p>
+                {!searchQuery && <NoHouseWorkIcon />}
+                <p className='text-center text-gray3 font-subhead'>
+                  {searchQuery ? (
+                    <>
+                      찾으시는 집안일이 없어요.
+                      <br />
+                      <span className='text-main'>
+                        [그룹 메뉴 &gt; 프리셋 관리 &gt; 사용자 정의]
+                      </span>
+                      에서
+                      <br />새 집안일을 추가해보세요.
+                    </>
+                  ) : (
+                    <>
+                      현재 집안일 목록이 없어요
+                      <br />
+                      새로운 목록을 만들어보세요
+                    </>
+                  )}
+                </p>
               </div>
             </div>
           )}
