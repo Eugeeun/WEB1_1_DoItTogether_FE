@@ -18,7 +18,7 @@ const SearchInput = ({}: SearchInputProps) => {
   };
 
   return (
-    <div className='flex items-center gap-2 rounded-lg bg-white px-4'>
+    <div className='flex items-center gap-2 rounded-lg bg-white px-5'>
       <InputBox
         disabled={false}
         handleChange={handleChange}
