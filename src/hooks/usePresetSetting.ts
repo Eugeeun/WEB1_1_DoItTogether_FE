@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState, useMemo } from 'react';
 import {
   deletePresetItem,
   getAllCategoryName,
@@ -8,6 +8,7 @@ import {
 import usePresetSettingStore from '@/store/usePresetSettingStore';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Category, PresetDefault, PresetTabName, INPUT_VALIDATION } from '@/constants';
+import { convertTabNameToChargers } from '@/utils/convertUtils';
 
 const usePresetSetting = () => {
   const navigate = useNavigate();
@@ -25,15 +26,34 @@ const usePresetSetting = () => {
     setActiveInputCate,
     activeInputCateId,
     setActiveInputCateId,
+    cateActiveTab,
+    presetData,
+    deleteButtonStates,
+    categoryList,
   } = usePresetSettingStore();
 
   const { channelId: strChannelId } = useParams();
   const channelId = Number(strChannelId);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [userData, setUserData] = useState(presetData);
+  const [presetDefaultData] = useState(PresetDefault);
 
   useEffect(() => {
     initCategoryList();
     setDeleteButtonStates(null);
   }, []);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await getAllCategoryList({ channelId });
+        setUserData(response.result.presetCategoryList);
+      } catch (error) {
+        console.error('프리셋 리스트 조회 오류: ', error);
+      }
+    };
+    fetchUserData();
+  }, [channelId]);
 
   const initCategoryList = async () => {
     try {
@@ -63,6 +83,25 @@ const usePresetSetting = () => {
       setPresetData(PresetDefault);
     }
   };
+
+  const getFilteredCount = (data: typeof presetData) => {
+    return data.flatMap(category =>
+      category.presetItemList.filter(item =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    ).length;
+  };
+
+  // 탭에 표시할 개수
+  const chargers = useMemo(() => {
+    return convertTabNameToChargers(PresetTabName).map(tab => ({
+      ...tab,
+      count:
+        tab.name === PresetTabName.PRESET_DATA
+          ? getFilteredCount(presetDefaultData)
+          : getFilteredCount(userData),
+    }));
+  }, [presetDefaultData, userData, searchQuery]);
 
   const handleAddInput = useCallback(
     async (name: string, presetCategoryId: number) => {
@@ -170,6 +209,16 @@ const usePresetSetting = () => {
     handleInputChange,
     handleKeyDown,
     handleIconClick,
+    searchQuery,
+    setSearchQuery,
+    chargers,
+    userData,
+    presetDefaultData,
+    cateActiveTab,
+    deleteButtonStates,
+    categoryList,
+    activeTab,
+    presetData,
   };
 };
 

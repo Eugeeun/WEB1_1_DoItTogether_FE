@@ -3,18 +3,26 @@ import PresetTab from '@/components/common/tab/PresetTab/PresetTab';
 import Tab from '@/components/common/tab/Tab/Tab';
 import PresetAddInput from '@/components/setting/presetSetting/PresetAddInput';
 import { PresetTabName } from '@/constants';
-import { convertTabNameToChargers } from '@/utils/convertUtils';
 import usePresetSetting from '@/hooks/usePresetSetting';
 import usePresetSettingStore from '@/store/usePresetSettingStore';
 import MetaTags from '@/components/common/metaTags/MetaTags';
 import { useParams } from 'react-router-dom';
-import { useMemo } from 'react';
+import SearchInput from '@/components/common/search/SearchInput';
 
 const PresetSettingPage = () => {
   const { categoryList, activeTab, cateActiveTab, deleteButtonStates, presetData } =
     usePresetSettingStore();
-  const { handleSelectClick, handleDeleteClick, handleBack, handleTabChange, handleCateTabChange } =
-    usePresetSetting();
+  const {
+    handleSelectClick,
+    handleDeleteClick,
+    handleBack,
+    handleTabChange,
+    handleCateTabChange,
+    searchQuery,
+    setSearchQuery,
+    chargers,
+    userData,
+  } = usePresetSetting();
   const { channelId } = useParams();
 
   return (
@@ -24,19 +32,17 @@ const PresetSettingPage = () => {
         description={'사용자정의 프리셋을 추가하고 삭제할 수 있습니다.'}
         url={`https://doit-together.vercel.app/group-setting/${channelId}/preset-setting/`}
       />
-      <div className='sticky top-0 z-10 bg-[#fff]'>
+      <div className='sticky top-0 z-10 flex flex-col gap-2 bg-[#fff]'>
         <Header title='프리셋 관리' isNeededDoneBtn={false} handleBack={handleBack} />
-        <Tab
-          activeTab={activeTab}
-          handleSetActiveTab={handleTabChange}
-          chargers={useMemo(() => convertTabNameToChargers(PresetTabName), [])}
-        />
+        <SearchInput handleChange={setSearchQuery} />
+        <Tab activeTab={activeTab} handleSetActiveTab={handleTabChange} chargers={chargers} />
       </div>
       {activeTab === PresetTabName.USER_DATA ? (
         <>
           <div className='mt-5 flex-1'>
             <PresetTab
-              presetData={presetData}
+              searchQuery={searchQuery}
+              presetData={userData}
               cateActiveTab={cateActiveTab}
               setCateActiveTab={handleCateTabChange}
               isPresetSettingCustom={true}
@@ -51,7 +57,11 @@ const PresetSettingPage = () => {
         </>
       ) : (
         <div className='mt-5 flex-1'>
-          <PresetTab presetData={presetData} isPresetSettingCustom={false} />
+          <PresetTab
+            searchQuery={searchQuery}
+            presetData={presetData}
+            isPresetSettingCustom={false}
+          />
         </div>
       )}
     </div>
