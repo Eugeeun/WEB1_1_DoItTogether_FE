@@ -33,7 +33,7 @@ const InputBox: React.FC<InputBoxProps> = ({
       )}
       <Input
         placeholder={placeholder}
-        className={`h-12 rounded-lg font-label ${leftIcon ? 'pl-10' : ''}`}
+        className={`h-12 rounded-lg font-label ${leftIcon ? 'pl-12' : ''}`}
         disabled={disabled}
         value={value}
         onChange={onChange}
