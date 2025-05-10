@@ -7,6 +7,7 @@ export interface SearchInputProps {}
 const SearchInput = ({}: SearchInputProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const [value, setValue] = useState('');
+  console.log('value', value);
 
   const handleChange = (val: string) => {
     setValue(val);
