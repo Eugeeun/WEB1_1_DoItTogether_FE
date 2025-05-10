@@ -47,6 +47,10 @@ const HouseWorkSheet: React.FC<HouseWorkSheetProps> = ({
   const [selectedHouseWork, setSelectedHouseWork] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
+  const [presetDefaultData] = useState<PresetList[]>(PresetDefault); // 프리셋 데이터
+  const [userData, setUserData] = useState<PresetList[]>([]); // 사용자 데이터
+  const [searchQuery, setSearchQuery] = useState('');
+
   const memoizedPresetData = useMemo(() => presetData, [presetData]);
 
   // 현재 입장한 채널
@@ -104,11 +108,39 @@ const HouseWorkSheet: React.FC<HouseWorkSheetProps> = ({
     });
   };
 
-  const [searchQuery, setSearchQuery] = useState('');
-
   const handleSearch = (value: string) => {
     setSearchQuery(value.toLowerCase());
   };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await getAllCategoryList({ channelId });
+        setUserData(response.result.presetCategoryList);
+      } catch (error) {
+        console.error('프리셋 리스트 조회 오류: ', error);
+      }
+    };
+    fetchUserData();
+  }, [channelId]);
+
+  // 검색 결과 개수 계산
+  const getFilteredCount = (data: PresetList[]) => {
+    return data.flatMap(category =>
+      category.presetItemList.filter(item => item.name.toLowerCase().includes(searchQuery))
+    ).length;
+  };
+
+  // 탭에 표시할 개수
+  const chargers = useMemo(() => {
+    return convertTabNameToChargers(PresetTabName).map(tab => ({
+      ...tab,
+      count:
+        tab.name === PresetTabName.PRESET_DATA
+          ? getFilteredCount(presetDefaultData)
+          : getFilteredCount(userData),
+    }));
+  }, [presetDefaultData, userData, searchQuery]);
 
   return (
     <BottomSheet isOpen={isOpen} setOpen={setOpen} title='집안일 선택'>
@@ -120,7 +152,7 @@ const HouseWorkSheet: React.FC<HouseWorkSheetProps> = ({
               activeTab={activeTab}
               // handleSetActiveTab={setActiveTab}
               handleSetActiveTab={handleTabChange}
-              chargers={convertTabNameToChargers(PresetTabName)}
+              chargers={chargers}
             />
           </div>
           <PresetTab
