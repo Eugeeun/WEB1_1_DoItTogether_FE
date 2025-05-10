@@ -42,6 +42,8 @@ const ManagerSelectSheet: React.FC<ManagerSelectSheetProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [tags, setTags] = useState<string[]>(['이유1', '이유2']);
 
+  const selectedManagerRef = React.useRef<HTMLLIElement>(null);
+
   const postAssignAi = async () => {
     //로딩 시작
     setIsLoading(true);
@@ -67,6 +69,13 @@ const ManagerSelectSheet: React.FC<ManagerSelectSheetProps> = ({
 
       //##4.로딩을 끝내준다.
       setIsLoading(false);
+
+      setTimeout(() => {
+        selectedManagerRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }, 100);
     } catch (error) {
       console.error(error);
       setIsLoading(false);
@@ -102,6 +111,7 @@ const ManagerSelectSheet: React.FC<ManagerSelectSheetProps> = ({
           setSelectedValue={setSelectedValue}
           selectedValue={selectedValue}
           members={members}
+          selectedRef={selectedManagerRef}
         />
         <div className='flex gap-3 px-5 pb-6'>
           <Button

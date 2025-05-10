@@ -8,6 +8,7 @@ import { Category, PresetDefault, PresetTabName } from '@/constants';
 import { convertTabNameToChargers } from '@/utils/convertUtils';
 import { getAllCategoryList } from '@/services/preset';
 import { useParams } from 'react-router-dom';
+import SearchInput from '@/components/common/search/SearchInput';
 
 interface HouseWorkSheetProps {
   /** 바텀시트 오픈 여부 */
@@ -45,6 +46,10 @@ const HouseWorkSheet: React.FC<HouseWorkSheetProps> = ({
   const [presetData, setPresetData] = useState<PresetList[]>([]);
   const [selectedHouseWork, setSelectedHouseWork] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  const [presetDefaultData] = useState<PresetList[]>(PresetDefault); // 프리셋 데이터
+  const [userData, setUserData] = useState<PresetList[]>([]); // 사용자 데이터
+  const [searchQuery, setSearchQuery] = useState('');
 
   const memoizedPresetData = useMemo(() => presetData, [presetData]);
 
@@ -103,19 +108,55 @@ const HouseWorkSheet: React.FC<HouseWorkSheetProps> = ({
     });
   };
 
+  const handleSearch = (value: string) => {
+    setSearchQuery(value.toLowerCase());
+  };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await getAllCategoryList({ channelId });
+        setUserData(response.result.presetCategoryList);
+      } catch (error) {
+        console.error('프리셋 리스트 조회 오류: ', error);
+      }
+    };
+    fetchUserData();
+  }, [channelId]);
+
+  // 검색 결과 개수 계산
+  const getFilteredCount = (data: PresetList[]) => {
+    return data.flatMap(category =>
+      category.presetItemList.filter(item => item.name.toLowerCase().includes(searchQuery))
+    ).length;
+  };
+
+  // 탭에 표시할 개수
+  const chargers = useMemo(() => {
+    return convertTabNameToChargers(PresetTabName).map(tab => ({
+      ...tab,
+      count:
+        tab.name === PresetTabName.PRESET_DATA
+          ? getFilteredCount(presetDefaultData)
+          : getFilteredCount(userData),
+    }));
+  }, [presetDefaultData, userData, searchQuery]);
+
   return (
     <BottomSheet isOpen={isOpen} setOpen={setOpen} title='집안일 선택'>
       <div className='flex min-h-96 flex-col gap-y-6 pb-6'>
-        <section aria-label='집안일 할당 바텀 시트' className='flex flex-1 flex-col gap-6'>
+        <section aria-label='집안일 할당 바텀 시트' className='flex flex-1 flex-col gap-4'>
+          <SearchInput handleChange={handleSearch} />
           <div>
             <Tab
               activeTab={activeTab}
               // handleSetActiveTab={setActiveTab}
               handleSetActiveTab={handleTabChange}
-              chargers={convertTabNameToChargers(PresetTabName)}
+              chargers={chargers}
             />
           </div>
           <PresetTab
+            searchQuery={searchQuery}
             presetData={memoizedPresetData}
             cateActiveTab={cateActiveTab}
             setCateActiveTab={handleCateTabChange}

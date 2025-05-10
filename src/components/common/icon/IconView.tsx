@@ -37,6 +37,7 @@ import {
   BroomDustIcon,
   BubbleIcon,
   ShinyIcon,
+  SearchIcon,
   ProfileDefaultIcon,
 } from '@/components/common/icon';
 import EnterIcon from '@/components/common/icon/EnterIcon';
@@ -203,6 +204,10 @@ const IconView = () => {
       <div className='flex flex-col items-center gap-2'>
         <p className='text-sm text-gray-600'>ProfileDefaultIcon</p>
         <ProfileDefaultIcon />
+      </div>
+      <div className='flex flex-col items-center gap-2'>
+        <p className='text-sm text-gray-600'>SearchIcon</p>
+        <SearchIcon />
       </div>
     </div>
   );
