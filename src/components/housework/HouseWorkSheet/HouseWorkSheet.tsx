@@ -8,6 +8,7 @@ import { Category, PresetDefault, PresetTabName } from '@/constants';
 import { convertTabNameToChargers } from '@/utils/convertUtils';
 import { getAllCategoryList } from '@/services/preset';
 import { useParams } from 'react-router-dom';
+import SearchInput from '@/components/common/search/SearchInput';
 
 interface HouseWorkSheetProps {
   /** 바텀시트 오픈 여부 */
@@ -107,6 +108,7 @@ const HouseWorkSheet: React.FC<HouseWorkSheetProps> = ({
     <BottomSheet isOpen={isOpen} setOpen={setOpen} title='집안일 선택'>
       <div className='flex min-h-96 flex-col gap-y-6 pb-6'>
         <section aria-label='집안일 할당 바텀 시트' className='flex flex-1 flex-col gap-6'>
+          <SearchInput />
           <div>
             <Tab
               activeTab={activeTab}
