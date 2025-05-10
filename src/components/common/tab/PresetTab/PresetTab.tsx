@@ -172,7 +172,13 @@ const PresetTab = ({
             ))
           ) : (
             <div
-              className={`${isBottomSheet ? 'h-[250px]' : 'h-[calc(100vh-400px)]'} grid place-items-center overflow-hidden`}
+              className={`${
+                isBottomSheet
+                  ? 'h-[250px]'
+                  : isPresetSettingCustom
+                    ? 'h-[calc(100vh-250px-138px)]'
+                    : 'h-[calc(100vh-250px)]'
+              } grid place-items-center overflow-hidden`}
             >
               <div className='flex flex-col items-center whitespace-pre-line'>
                 {!searchQuery && <NoHouseWorkIcon />}
