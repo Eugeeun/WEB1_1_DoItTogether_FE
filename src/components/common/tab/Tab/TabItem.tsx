@@ -14,7 +14,7 @@ const TabItem: React.FC<TabItemProps> = ({ name, value, count }) => {
       className='rounded-none border-b-[3px] border-transparent px-8 py-3 text-gray2 font-label data-[state=active]:border-b-[3px] data-[state=active]:border-main data-[state=active]:shadow-none'
     >
       {name}
-      {count !== undefined && <span className='text-main'>({count})</span>}
+      {count !== undefined && <span>({count})</span>}
     </TabsTrigger>
   );
 };
