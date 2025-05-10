@@ -8,7 +8,8 @@ import usePresetSetting from '@/hooks/usePresetSetting';
 import usePresetSettingStore from '@/store/usePresetSettingStore';
 import MetaTags from '@/components/common/metaTags/MetaTags';
 import { useParams } from 'react-router-dom';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import SearchInput from '@/components/common/search/SearchInput';
 
 const PresetSettingPage = () => {
   const { categoryList, activeTab, cateActiveTab, deleteButtonStates, presetData } =
@@ -16,6 +17,7 @@ const PresetSettingPage = () => {
   const { handleSelectClick, handleDeleteClick, handleBack, handleTabChange, handleCateTabChange } =
     usePresetSetting();
   const { channelId } = useParams();
+  const [searchQuery, setSearchQuery] = useState('');
 
   return (
     <div className={`flex h-screen flex-col`}>
@@ -26,6 +28,7 @@ const PresetSettingPage = () => {
       />
       <div className='sticky top-0 z-10 bg-[#fff]'>
         <Header title='프리셋 관리' isNeededDoneBtn={false} handleBack={handleBack} />
+        <SearchInput handleChange={setSearchQuery} />
         <Tab
           activeTab={activeTab}
           handleSetActiveTab={handleTabChange}
@@ -36,6 +39,7 @@ const PresetSettingPage = () => {
         <>
           <div className='mt-5 flex-1'>
             <PresetTab
+              searchQuery={searchQuery}
               presetData={presetData}
               cateActiveTab={cateActiveTab}
               setCateActiveTab={handleCateTabChange}
