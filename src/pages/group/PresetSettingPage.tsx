@@ -32,7 +32,7 @@ const PresetSettingPage = () => {
         description={'사용자정의 프리셋을 추가하고 삭제할 수 있습니다.'}
         url={`https://doit-together.vercel.app/group-setting/${channelId}/preset-setting/`}
       />
-      <div className='sticky top-0 z-10 bg-[#fff]'>
+      <div className='sticky top-0 z-10 flex flex-col gap-2 bg-[#fff]'>
         <Header title='프리셋 관리' isNeededDoneBtn={false} handleBack={handleBack} />
         <SearchInput handleChange={setSearchQuery} />
         <Tab activeTab={activeTab} handleSetActiveTab={handleTabChange} chargers={chargers} />
