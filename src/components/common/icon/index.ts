@@ -40,3 +40,4 @@ export { default as ProfileDefaultIcon } from './ProfileDefaultIcon';
 export { default as NaverIcon } from './NaverIcon';
 export { default as GoogleIcon } from './GoogleIcon';
 export { default as KakaoIcon } from './KakaoIcon';
+export { default as SearchIcon } from './SearchIcon';
