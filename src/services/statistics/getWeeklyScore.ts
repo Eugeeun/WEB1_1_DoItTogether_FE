@@ -6,5 +6,6 @@ export const getWeeklyScore = async ({ channelId, targetDate }: GetWeeklyScoreRe
     `/api/v1/channels/${channelId}/statistics/weekly/score`,
     { params: { targetDate } }
   );
+  console.log('주간 통계 랭킹 데이터 조회 성공', response.data);
   return response.data;
 };
