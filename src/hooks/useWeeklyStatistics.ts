@@ -54,6 +54,8 @@ const useWeeklyStatistics = () => {
       newDate.setDate(newDate.getDate() - 7);
       return newDate;
     });
+
+    setScoreCountData([]);
   }, [setCurrentDate]);
 
   const handleNextWeek = useCallback(() => {
@@ -62,6 +64,8 @@ const useWeeklyStatistics = () => {
       newDate.setDate(newDate.getDate() + 7);
       return newDate;
     });
+
+    setScoreCountData([]);
   }, [setCurrentDate]);
 
   return {
