@@ -54,6 +54,7 @@ const useWeeklyStatistics = () => {
       newDate.setDate(newDate.getDate() - 7);
       return newDate;
     });
+
     setScoreCountData([]);
   }, [setCurrentDate]);
 
@@ -63,6 +64,7 @@ const useWeeklyStatistics = () => {
       newDate.setDate(newDate.getDate() + 7);
       return newDate;
     });
+
     setScoreCountData([]);
   }, [setCurrentDate]);
 
