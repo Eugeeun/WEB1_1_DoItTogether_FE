@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.vercel.doit_together.twa",
+      "sha256_cert_fingerprints": [
+        "6D:AF:5F:4C:6F:78:70:E3:62:43:19:E7:6B:B1:D6:81:C9:6C:75:32:EE:C5:0F:19:3F:97:F8:A8:57:FD:5F:2F"
+      ]
+    }
+  }
+]
