@@ -6,5 +6,6 @@ export const getWeeklyScore = async ({ channelId, targetDate }: GetWeeklyScoreRe
     `/api/v1/channels/${channelId}/statistics/weekly/score`,
     { params: { targetDate } }
   );
+
   return response.data;
 };
