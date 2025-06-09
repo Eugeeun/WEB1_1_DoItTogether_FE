@@ -95,11 +95,17 @@ export const useNotification = () => {
 
   // 알림 토글 (스위치 조작)
   const toggleFCM = async (enable: boolean): Promise<boolean> => {
+    // 항상 최신 권한 상태를 직접 확인
+    const currentPermission = 'Notification' in window ? Notification.permission : 'unsupported';
+    setPermissionStatus(currentPermission);
+
     if (enable) {
-      if (permissionStatus !== 'granted' && !(await requestPermission())) return false;
-      return setupFCM(); // FCM 설정
+      if (currentPermission !== 'granted') {
+        if (!(await requestPermission())) return false;
+      }
+      return setupFCM();
     }
-    return deleteFCM(); // FCM 삭제
+    return deleteFCM();
   };
 
   return {
